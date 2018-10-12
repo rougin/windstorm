@@ -1,7 +1,8 @@
 {
     "name": "rougin/windstorm",
-    "description": "Interoperable and framework-agnostic ORMs.",
+    "description": "An interoperable SQL query builder.",
     "homepage": "https://github.com/rougin/windstorm",
+    "license": "MIT",
     "authors": [
         {
             "name": "Rougin Gutib",
@@ -22,7 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Rougin\\Windstorm\\": "src"
+            "Rougin\\Windstorm\\": "src",
+            "Eskwela\\Sample\\": "app"
         }
     },
     "autoload-dev": {
