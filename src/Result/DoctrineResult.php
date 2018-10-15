@@ -1,12 +1,12 @@
 <?php
 
-namespace Rougin\Windstorm;
+namespace Rougin\Windstorm\Result;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 
-class DoctrineOrm implements OrmInterface
+class DoctrineResult implements ResultInterface
 {
     protected $manager;
 

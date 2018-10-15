@@ -1,12 +1,12 @@
 <?php
 
-namespace Rougin\Windstorm;
+namespace Rougin\Windstorm\Result;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class EloquentOrm implements OrmInterface
+class EloquentResult implements ResultInterface
 {
     protected $connection;
 

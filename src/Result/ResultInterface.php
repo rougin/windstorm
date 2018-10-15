@@ -1,8 +1,8 @@
 <?php
 
-namespace Rougin\Windstorm;
+namespace Rougin\Windstorm\Result;
 
-interface OrmInterface
+interface ResultInterface
 {
     public function execute($sql, array $parameters, array $types);
 }

@@ -4,12 +4,12 @@ namespace Rougin\Windstorm;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Rougin\Windstorm\OrmInterface;
 use Rougin\Windstorm\Query\DeleteQuery;
 use Rougin\Windstorm\Query\InsertQuery;
 use Rougin\Windstorm\Query\ResultQuery;
 use Rougin\Windstorm\Query\SelectQuery;
 use Rougin\Windstorm\Query\UpdateQuery;
+use Rougin\Windstorm\ResultInterface;
 
 class Builder extends QueryBuilder
 {
@@ -52,7 +52,7 @@ class Builder extends QueryBuilder
         return (string) $sql->get();
     }
 
-    public function result(OrmInterface $orm)
+    public function result(ResultInterface $result)
     {
         $parameters = (array) $this->getParameters();
 
@@ -60,6 +60,6 @@ class Builder extends QueryBuilder
 
         $types = (array) $this->getParameterTypes();
 
-        return $orm->execute($sql, $parameters, $types);
+        return $result->execute($sql, $parameters, $types);
     }
 }

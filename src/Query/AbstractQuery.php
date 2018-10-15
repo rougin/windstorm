@@ -17,7 +17,8 @@ abstract class AbstractQuery
 
         $alias = null;
 
-        if (isset($this->parts['from']['alias'])) {
+        if (isset($this->parts['from']['alias']))
+        {
             $alias = $this->parts['from']['alias'];
         }
 

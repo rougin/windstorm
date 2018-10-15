@@ -38,7 +38,8 @@ class QueryFactory
     {
         $table = $this->builder->update((string) $this->table);
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $table = $table->set((string) $key, $value);
         }
 

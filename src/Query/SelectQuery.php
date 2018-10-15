@@ -36,7 +36,8 @@ class SelectQuery
         $query .= $this->parts['having'] !== null ? ' HAVING ' . ((string) $this->parts['having']) : '';
         $query .= $this->parts['orderBy'] ? ' ORDER BY ' . implode(', ', $this->parts['orderBy']) : '';
 
-        if ($this->max !== null || $this->first !== null) {
+        if ($this->max !== null || $this->first !== null)
+        {
             return $this->platform->modifyLimitQuery($query, $this->max, $this->first);
         }
 
@@ -48,20 +49,18 @@ class SelectQuery
      */
     protected function clauses()
     {
-        $clauses = array();
-
-        $aliases = array();
+        list($aliases, $clauses) = array(array(), array());
 
         // Loop through all FROM clauses
-        foreach ($this->parts['from'] as $from) {
-            if ($from['alias'] === null) {
-                $sql = $from['table'];
+        foreach ($this->parts['from'] as $from)
+        {
+            $sql = $reference = $from['table'];
 
-                $reference = $from['table'];
-            } else {
+            if ($from['alias'] !== null)
+            {
                 $sql = $from['table'] . ' ' . $from['alias'];
 
-                $reference = $from['alias'];
+                $reference = (string) $from['alias'];
             }
 
             $aliases[$reference] = true;
@@ -86,12 +85,15 @@ class SelectQuery
     {
         $sql = '';
 
-        if (! isset($this->parts['join'][$alias])) {
+        if (! isset($this->parts['join'][$alias]))
+        {
             return $sql;
         }
 
-        foreach ($this->parts['join'][$alias] as $join) {
-            if (array_key_exists($join['joinAlias'], $aliases)) {
+        foreach ($this->parts['join'][$alias] as $join)
+        {
+            if (array_key_exists($join['joinAlias'], $aliases))
+            {
                 throw QueryException::nonUniqueAlias($join['joinAlias'], array_keys($aliases));
             }
 
@@ -101,7 +103,8 @@ class SelectQuery
             $aliases[$join['joinAlias']] = true;
         }
 
-        foreach ($this->parts['join'][$alias] as $join) {
+        foreach ($this->parts['join'][$alias] as $join)
+        {
             $sql .= $this->joins($join['joinAlias'], $aliases);
         }
 
@@ -115,8 +118,10 @@ class SelectQuery
      */
     protected function verify(array $aliases)
     {
-        foreach ($this->parts['join'] as $alias => $joins) {
-            if ( ! isset($aliases[$alias])) {
+        foreach ($this->parts['join'] as $alias => $joins)
+        {
+            if (! isset($aliases[$alias]))
+            {
                 throw QueryException::unknownAlias($alias, array_keys($aliases));
             }
         }

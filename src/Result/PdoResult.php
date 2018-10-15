@@ -1,10 +1,10 @@
 <?php
 
-namespace Rougin\Windstorm;
+namespace Rougin\Windstorm\Result;
 
 use PDO;
 
-class PdoWrapper implements OrmInterface
+class PdoWrapper implements ResultInterface
 {
     public function __construct(PDO $pdo)
     {
