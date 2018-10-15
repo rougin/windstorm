@@ -9,7 +9,7 @@ use Rougin\Windstorm\Query\InsertQuery;
 use Rougin\Windstorm\Query\ResultQuery;
 use Rougin\Windstorm\Query\SelectQuery;
 use Rougin\Windstorm\Query\UpdateQuery;
-use Rougin\Windstorm\ResultInterface;
+use Rougin\Windstorm\Result\ResultInterface;
 
 class Builder extends QueryBuilder
 {

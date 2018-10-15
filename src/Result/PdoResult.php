@@ -4,7 +4,7 @@ namespace Rougin\Windstorm\Result;
 
 use PDO;
 
-class PdoWrapper implements ResultInterface
+class PdoResult implements ResultInterface
 {
     public function __construct(PDO $pdo)
     {
