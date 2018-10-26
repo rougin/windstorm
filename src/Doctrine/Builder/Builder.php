@@ -1,21 +1,18 @@
 <?php
 
-namespace Rougin\Windstorm;
+namespace Rougin\Windstorm\Doctrine\Builder;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Rougin\Windstorm\Query\DeleteQuery;
-use Rougin\Windstorm\Query\InsertQuery;
-use Rougin\Windstorm\Query\ResultQuery;
-use Rougin\Windstorm\Query\SelectQuery;
-use Rougin\Windstorm\Query\UpdateQuery;
-use Rougin\Windstorm\Result\ResultInterface;
 
 class Builder extends QueryBuilder
 {
     public function __construct($platform)
     {
-        if ($platform instanceof Connection) {
+        if ($platform instanceof Connection)
+        {
+            $this->connection = $platform;
+
             $platform = $platform->getDatabasePlatform();
         }
 
@@ -24,11 +21,11 @@ class Builder extends QueryBuilder
 
     public function getSql()
     {
-        $parts = $this->getQueryParts();
+        $first = $this->getFirstResult();
 
         $max = $this->getMaxResults();
 
-        $first = $this->getFirstResult();
+        $parts = $this->getQueryParts();
 
         switch ($this->getType()) {
             case self::INSERT:
@@ -52,14 +49,30 @@ class Builder extends QueryBuilder
         return (string) $sql->get();
     }
 
-    public function result(ResultInterface $result)
+    public function set($key, $value)
     {
-        $parameters = (array) $this->getParameters();
+        $parameters = $this->getParameters();
 
-        $sql = (string) $this->getSql();
+        $index = count((array) $parameters);
 
-        $types = (array) $this->getParameterTypes();
+        $this->setParameter($index, $value);
 
-        return $result->execute($sql, $parameters, $types);
+        return $this->add('set', $key . ' = ?', true);
+    }
+
+    public function values(array $values)
+    {
+        $index = 0;
+
+        foreach ($values as $key => $value)
+        {
+            $this->setParameter($index, $value);
+
+            $index = $index + 1;
+
+            $values[$key] = '?';
+        }
+
+        return $this->add('values', $values);
     }
 }

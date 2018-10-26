@@ -1,6 +1,6 @@
 <?php
 
-namespace Rougin\Windstorm\Query;
+namespace Rougin\Windstorm\Doctrine\Builder;
 
 class DeleteQuery extends AbstractQuery
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rougin\Windstorm\Result;
+namespace Rougin\Windstorm;
 
 interface ResultInterface
 {

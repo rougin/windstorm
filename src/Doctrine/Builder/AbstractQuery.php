@@ -1,14 +1,14 @@
 <?php
 
-namespace Rougin\Windstorm\Query;
+namespace Rougin\Windstorm\Doctrine\Builder;
 
 abstract class AbstractQuery
 {
-    protected $parts = array();
+    protected $parameters = array();
 
     public function __construct(array $parts)
     {
-        $this->parts = $parts;
+        $this->parts = (array) $parts;
     }
 
     protected function table()
@@ -22,7 +22,9 @@ abstract class AbstractQuery
             $alias = $this->parts['from']['alias'];
         }
 
-        return $table . ($alias ? ' ' . $alias : '');
+        $alias = $alias ? ' ' . $alias : '';
+
+        return $table . (string) $alias;
     }
 
     protected function where()

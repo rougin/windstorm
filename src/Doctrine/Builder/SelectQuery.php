@@ -1,6 +1,6 @@
 <?php
 
-namespace Rougin\Windstorm\Query;
+namespace Rougin\Windstorm\Doctrine\Builder;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Query\QueryException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rougin\Windstorm\Query;
+namespace Rougin\Windstorm\Doctrine\Builder;
 
 class InsertQuery extends AbstractQuery
 {
@@ -10,7 +10,7 @@ class InsertQuery extends AbstractQuery
 
         $keys = ' (' . implode(', ', array_keys($values)) . ')';
 
-        $values = ' VALUES(' . implode(', ', $values) . ')';
+        $values = ' VALUES (' . implode(', ', $values) . ')';
 
         return 'INSERT INTO ' . $this->table() . $keys . $values;
     }
