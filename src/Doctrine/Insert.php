@@ -5,14 +5,36 @@ namespace Rougin\Windstorm\Doctrine;
 use Rougin\Windstorm\Doctrine\Builder;
 use Rougin\Windstorm\InsertInterface;
 
+/**
+ * Insert Query
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class Insert implements InsertInterface
 {
+    /**
+     * @var \Rougin\Windstorm\Doctrine\Builder
+     */
     protected $builder;
 
+    /**
+     * @var \Rougin\Windstorm\Doctrine\Query
+     */
     protected $query;
 
-    protected $table;
+    /**
+     * @var string
+     */
+    protected $table = '';
 
+    /**
+     * Initializes the query instance.
+     *
+     * @param \Rougin\Windstorm\Doctrine\Query   $query
+     * @param \Rougin\Windstorm\Doctrine\Builder $builder
+     * @param string                             $table
+     */
     public function __construct(Query $query, Builder $builder, $table)
     {
         $this->builder = $builder;
@@ -22,6 +44,12 @@ class Insert implements InsertInterface
         $this->table = $table;
     }
 
+    /**
+     * Sets the values to be inserted.
+     *
+     * @param  array  $data
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function values(array $data)
     {
         $this->builder->insert($this->table);

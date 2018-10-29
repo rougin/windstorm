@@ -6,20 +6,52 @@ use Rougin\Windstorm\Doctrine\Builder;
 use Rougin\Windstorm\Doctrine\Builder\Expression;
 use Rougin\Windstorm\WhereInterface;
 
+/**
+ * Where Query
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class Where implements WhereInterface
 {
+    /**
+     * @var \Rougin\Windstorm\Doctrine\Builder
+     */
     protected $builder;
 
+    /**
+     * @var \Rougin\Windstorm\Doctrine\Expression
+     */
     protected $expression;
 
+    /**
+     * @var string
+     */
     protected $key;
 
+    /**
+     * @var string
+     */
     protected $method = 'where';
 
+    /**
+     * @var \Rougin\Windstorm\Doctrine\Query
+     */
     protected $query;
 
+    /**
+     * @var string
+     */
     protected $type;
 
+    /**
+     * Initializes the query instance.
+     *
+     * @param \Rougin\Windstorm\Doctrine\Query   $query
+     * @param \Rougin\Windstorm\Doctrine\Builder $builder
+     * @param string                             $key
+     * @param string                             $type
+     */
     public function __construct(Query $query, Builder $builder, $key, $type = '')
     {
         $this->builder = $builder;
@@ -33,6 +65,12 @@ class Where implements WhereInterface
         $this->type = $type;
     }
 
+    /**
+     * Generates an equality comparison.
+     *
+     * @param  mixed $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function equals($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -50,6 +88,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates an non-equality comparison.
+     *
+     * @param  mixed $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function notEqualTo($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -67,6 +111,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a greater-than comparison.
+     *
+     * @param  mixed $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function greaterThan($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -84,6 +134,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a greater-than or an equality comparison.
+     *
+     * @param  mixed $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function greaterThanOrEqualTo($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -101,6 +157,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates an IN () query comparison.
+     *
+     * @param  array $values
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function in(array $values)
     {
         $type = strtolower($this->type) . $this->method;
@@ -125,6 +187,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates an NOT IN () query comparison.
+     *
+     * @param  array $values
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function notIn(array $values)
     {
         $type = strtolower($this->type) . $this->method;
@@ -149,6 +217,11 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a false comparison.
+     *
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function isFalse()
     {
         $type = strtolower($this->type) . $this->method;
@@ -160,6 +233,11 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates an IS NOT NULL query comparison.
+     *
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function isNotNull()
     {
         $type = strtolower($this->type) . $this->method;
@@ -171,6 +249,11 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates an IS NULL query comparison.
+     *
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function isNull()
     {
         $type = strtolower($this->type) . $this->method;
@@ -182,6 +265,11 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a true comparison.
+     *
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function isTrue()
     {
         $type = strtolower($this->type) . $this->method;
@@ -193,6 +281,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a less-than comparison.
+     *
+     * @param  mixed $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function lessThan($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -210,6 +304,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a less-than or an equality comparison.
+     *
+     * @param  mixed $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function lessThanOrEqualTo($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -227,6 +327,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a LIKE query comparison.
+     *
+     * @param  string $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function like($value)
     {
         $type = strtolower($this->type) . $this->method;
@@ -244,6 +350,12 @@ class Where implements WhereInterface
         return $this->query->builder($this->builder);
     }
 
+    /**
+     * Generates a NOT LIKE query comparison.
+     *
+     * @param  string $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function notLike($value)
     {
         $type = strtolower($this->type) . $this->method;

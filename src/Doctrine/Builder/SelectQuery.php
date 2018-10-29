@@ -5,16 +5,42 @@ namespace Rougin\Windstorm\Doctrine\Builder;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Query\QueryException;
 
+/**
+ * Select Query
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class SelectQuery
 {
+    /**
+     * @var array
+     */
     protected $parts = array();
 
+    /**
+     * @var \Doctrine\DBAL\Platforms\AbstractPlatform
+     */
     protected $platform;
 
+    /**
+     * @var integer|null
+     */
     protected $max = null;
 
+    /**
+     * @var integer|null
+     */
     protected $first = null;
 
+    /**
+     * Initializes the query instance.
+     *
+     * @param array                                     $parts
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     * @param integer|null                              $max
+     * @param integer|null                              $first
+     */
     public function __construct($parts, AbstractPlatform $platform, $max, $first)
     {
         $this->parts = $parts;
@@ -26,6 +52,11 @@ class SelectQuery
         $this->first = $first;
     }
 
+    /**
+     * Returns the compiled SQL.
+     *
+     * @return string
+     */
     public function get()
     {
         $query = 'SELECT ' . (string) implode(', ', $this->parts['select']);
@@ -45,6 +76,8 @@ class SelectQuery
     }
 
     /**
+     * Verifies and returns the clauses specified.
+     *
      * @return string[]
      */
     protected function clauses()
@@ -74,12 +107,12 @@ class SelectQuery
     }
 
     /**
-     * @param string $alias
-     * @param array  $aliases
+     * Creates JOIN queries on specified tables.
      *
+     * @param  string $alias
+     * @param  array  $aliases
      * @return string
-     *
-     * @throws QueryException
+     * @throws \Doctrine\DBAL\Query\QueryException
      */
     protected function joins($alias, array &$aliases)
     {
@@ -112,9 +145,10 @@ class SelectQuery
     }
 
     /**
-     * @param array $aliases
+     * Verifies the specified aliases.
      *
-     * @throws QueryException
+     * @param  array $aliases
+     * @throws \Doctrine\DBAL\Query\QueryException
      */
     protected function verify(array $aliases)
     {

@@ -2,7 +2,21 @@
 
 namespace Rougin\Windstorm;
 
+/**
+ * Result Interface
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 interface ResultInterface
 {
-    public function execute($sql, array $parameters, array $types);
+    /**
+     * Executes an SQL statement with its bindings and types.
+     *
+     * @param  string $sql
+     * @param  array  $bindings
+     * @param  array  $types
+     * @return mixed
+     */
+    public function execute($sql, array $bindings, array $types);
 }

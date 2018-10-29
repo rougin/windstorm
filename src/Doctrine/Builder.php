@@ -73,6 +73,13 @@ class Builder extends QueryBuilder
         return (string) $sql->get();
     }
 
+    /**
+     * Sets a new value for a column in a bulk update query.
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     * @return self
+     */
     public function set($key, $value)
     {
         $parameters = $this->getParameters();
@@ -84,6 +91,12 @@ class Builder extends QueryBuilder
         return $this->add('set', $key . ' = ?', true);
     }
 
+    /**
+     * Specifies values for an insert query indexed by column names.
+     *
+     * @param  array  $values
+     * @return self
+     */
     public function values(array $values)
     {
         $index = 0;
