@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Rougin\Windstorm\Doctrine\Builder\Builder;
+use Rougin\Windstorm\Doctrine\Builder;
 use Rougin\Windstorm\OrderInterface;
 
 class Order implements OrderInterface
@@ -10,6 +10,8 @@ class Order implements OrderInterface
     protected $builder;
 
     protected $key;
+
+    protected $order = 'ASC';
 
     protected $query;
 
@@ -19,37 +21,33 @@ class Order implements OrderInterface
     {
         $this->builder = $builder;
 
-        $type === 'AND' && $this->type = 'add';
-
-        $this->key = (string) $key;
+        $this->key = $key;
 
         $this->query = $query;
 
-        $type = strtolower($this->type) . 'OrderBy';
-
-        $this->builder->$type($this->key, 'ASC');
+        $this->type = $type;
     }
 
     public function ascending()
     {
-        $type = strtolower($this->type) . 'OrderBy';
+        $this->order = 'ASC';
 
-        $this->builder->$type($this->key, 'ASC');
-
-        return $this->query->builder($this->builder);
+        return $this;
     }
 
     public function descending()
     {
-        $type = strtolower($this->type) . 'OrderBy';
+        $this->order = 'DESC';
 
-        $this->builder->$type($this->key, 'DESC');
-
-        return $this->query->builder($this->builder);
+        return $this;
     }
 
     public function __call($method, $parameters)
     {
+        $type = (string) strtolower($this->type) . 'OrderBy';
+
+        $this->builder->$type($this->key, $this->order);
+
         $this->query = $this->query->builder($this->builder);
 
         $instance = array($this->query, (string) $method);
@@ -59,8 +57,12 @@ class Order implements OrderInterface
 
     public function __toString()
     {
+        $type = (string) strtolower($this->type) . 'OrderBy';
+
+        $this->builder->$type($this->key, $this->order);
+
         $this->query = $this->query->builder($this->builder);
 
-        return $this->query->__toString();
+        return (string) $this->query->__toString();
     }
 }

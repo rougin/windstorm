@@ -1,9 +1,13 @@
 <?php
 
-namespace Rougin\Windstorm\Doctrine\Builder;
+namespace Rougin\Windstorm\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Rougin\Windstorm\Doctrine\Builder\DeleteQuery;
+use Rougin\Windstorm\Doctrine\Builder\InsertQuery;
+use Rougin\Windstorm\Doctrine\Builder\SelectQuery;
+use Rougin\Windstorm\Doctrine\Builder\UpdateQuery;
 
 class Builder extends QueryBuilder
 {

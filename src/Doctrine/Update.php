@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Rougin\Windstorm\Doctrine\Builder\Builder;
+use Rougin\Windstorm\Doctrine\Builder;
 use Rougin\Windstorm\UpdateInterface;
 
 class Update implements UpdateInterface
@@ -13,9 +13,9 @@ class Update implements UpdateInterface
 
     protected $table;
 
-    public function __construct(Query $query, Builder $builder, $table)
+    public function __construct(Query $query, Builder $builder, $table, $initial)
     {
-        $this->builder = $builder->update($table);
+        $this->builder = $builder->update($table, $initial);
 
         $this->query = $query;
 
