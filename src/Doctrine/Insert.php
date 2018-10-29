@@ -7,18 +7,14 @@ use Rougin\Windstorm\InsertInterface;
 
 class Insert implements InsertInterface
 {
-    protected $alias;
-
     protected $builder;
 
     protected $query;
 
     protected $table;
 
-    public function __construct(Query $query, Builder $builder, $table, $alias)
+    public function __construct(Query $query, Builder $builder, $table)
     {
-        $this->alias = $alias;
-
         $this->builder = $builder;
 
         $this->query = $query;
@@ -28,7 +24,7 @@ class Insert implements InsertInterface
 
     public function values(array $data)
     {
-        $this->builder->insert($this->table, $this->alias);
+        $this->builder->insert($this->table);
 
         $this->builder->values((array) $data);
 

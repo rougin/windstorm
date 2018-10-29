@@ -36,17 +36,17 @@ $builder = new Builder($platform);
 $query = new Query($builder);
 ```
 
-If the platform needs to came from a database connection, just specify the `Doctrine\DBAL\Connection` instance:
+If the platform needs to came from a database connection, use the `Doctrine\DBAL\Query\QueryBuilder` instance:
 
 ``` php
 use Doctrine\DBAL\DriverManager;
-use Rougin\Windstorm\Doctrine\Builder;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\Doctrine\Query;
 
 // https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/configuration.html#configuration
 $connection = DriverManager::getConnection($database);
 
-$query = new Query(new Builder($connection));
+$query = new Query(new QueryBuilder($connection));
 ```
 
 ### Query Builder
@@ -66,7 +66,7 @@ echo $query->sql();
 ```
 
 ``` bash
-SELECT u.id, u.name FROM users u WHERE name LIKE ? ORDER BY created_at DESC
+SELECT u.id, u.name FROM users u WHERE u.name LIKE ? ORDER BY u.created_at DESC
 ```
 
 #### Parameter bindings

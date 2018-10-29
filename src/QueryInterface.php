@@ -6,7 +6,7 @@ interface QueryInterface
 {
     public function select(array $fields);
 
-    public function from($table);
+    public function from($table, $alias = null);
 
     public function innerJoin($table, $local, $foreign);
 
@@ -16,9 +16,9 @@ interface QueryInterface
 
     public function insertInto($table);
 
-    public function update($table);
+    public function update($table, $alias = null);
 
-    public function deleteFrom($table);
+    public function deleteFrom($table, $alias = null);
 
     public function where($key);
 

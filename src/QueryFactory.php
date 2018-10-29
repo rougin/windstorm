@@ -6,6 +6,8 @@ class QueryFactory
 {
     protected $query;
 
+    protected $table = '';
+
     public function __construct(QueryInterface $query)
     {
         $this->query = $query;
@@ -41,7 +43,7 @@ class QueryFactory
     {
         $query = $this->query->update($this->table);
 
-        foreach ($data as $key => $value)
+        foreach ((array) $data as $key => $value)
         {
             $query = $query->set($key, $value);
         }

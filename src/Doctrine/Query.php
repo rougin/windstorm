@@ -90,20 +90,17 @@ class Query implements QueryInterface
         return $this;
     }
 
-    public function insertInto($table, $alias = null)
+    public function insertInto($table)
     {
+        $this->initial = '';
+
+        $this->table = '';
+
         $this->builder->resetQueryParts();
 
         $this->builder->setParameters(array());
 
-        if ($alias === null)
-        {
-            $alias = $table[0];
-        }
-
-        $this->initial = $alias;
-
-        return new Insert($this, $this->builder, $table, $alias);
+        return new Insert($this, $this->builder, $table);
     }
 
     public function update($table, $alias = null)

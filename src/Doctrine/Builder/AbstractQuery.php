@@ -4,7 +4,7 @@ namespace Rougin\Windstorm\Doctrine\Builder;
 
 abstract class AbstractQuery
 {
-    protected $parameters = array();
+    protected $parts = array();
 
     public function __construct(array $parts)
     {
@@ -31,6 +31,6 @@ abstract class AbstractQuery
     {
         $where = (string) $this->parts['where'];
 
-        return $where !== null ? ' WHERE ' . $where : '';
+        return $where !== '' ? ' WHERE ' . $where : '';
     }
 }

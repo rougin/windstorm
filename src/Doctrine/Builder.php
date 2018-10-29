@@ -9,20 +9,39 @@ use Rougin\Windstorm\Doctrine\Builder\InsertQuery;
 use Rougin\Windstorm\Doctrine\Builder\SelectQuery;
 use Rougin\Windstorm\Doctrine\Builder\UpdateQuery;
 
+/**
+ * Query Builder
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class Builder extends QueryBuilder
 {
+    /**
+     * @var \Doctrine\DBAL\Platforms\AbstractPlatform
+     */
+    protected $platform;
+
+    /**
+     * Initializes the platform instance.
+     *
+     * @param \Doctrine\DBAL\Connection|\Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     */
     public function __construct($platform)
     {
         if ($platform instanceof Connection)
         {
-            $this->connection = $platform;
-
             $platform = $platform->getDatabasePlatform();
         }
 
         $this->platform = $platform;
     }
 
+    /**
+     * Returns the complete SQL string.
+     *
+     * @return string
+     */
     public function getSql()
     {
         $first = $this->getFirstResult();
@@ -45,6 +64,7 @@ class Builder extends QueryBuilder
 
                 break;
             case self::SELECT:
+            default:
                 $sql = new SelectQuery($parts, $this->platform, $max, $first);
 
                 break;
