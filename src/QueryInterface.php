@@ -35,4 +35,10 @@ interface QueryInterface
     public function orHaving($key);
 
     public function orderBy($key);
+
+    public function sql();
+
+    public function bindings();
+
+    public function types();
 }
