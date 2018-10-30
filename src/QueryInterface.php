@@ -158,10 +158,6 @@ interface QueryInterface
     /**
      * Performs a LIMIT query.
      *
-     * NOTE: If not supported by a database engine, it should
-     * having at least a query returning a limited result set
-     * and a query for returning a limited offset result.
-     *
      * @param  integer      $limit
      * @param  integer|null $offset
      * @return self

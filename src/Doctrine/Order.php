@@ -44,10 +44,16 @@ class Order implements OrderInterface
      * @param \Rougin\Windstorm\Doctrine\Query   $query
      * @param \Rougin\Windstorm\Doctrine\Builder $builder
      * @param string                             $key
+     * @param string                             $initial
      * @param string                             $type
      */
-    public function __construct(Query $query, Builder $builder, $key, $type = '')
+    public function __construct(Query $query, Builder $builder, $key, $initial, $type = '')
     {
+        if (strpos($key, '.') === false)
+        {
+            $key = $initial . '.' . $key;
+        }
+
         $this->builder = $builder;
 
         $this->key = $key;
@@ -90,13 +96,7 @@ class Order implements OrderInterface
      */
     public function __call($method, $parameters)
     {
-        $type = (string) strtolower($this->type) . 'OrderBy';
-
-        $this->builder->$type($this->key, $this->order);
-
-        $this->query = $this->query->builder($this->builder);
-
-        $instance = array($this->query, (string) $method);
+        $instance = array($this->set(), (string) $method);
 
         return call_user_func_array($instance, $parameters);
     }
@@ -108,12 +108,22 @@ class Order implements OrderInterface
      */
     public function __toString()
     {
-        $type = (string) strtolower($this->type) . 'OrderBy';
+        return $this->set()->__toString();
+    }
+
+    /**
+     * Sets the order type and calls a method from QueryInstance.
+     *
+     * @return \Rougin\Windstorm\QueryInterface
+     */
+    protected function set()
+    {
+        $type = strtolower($this->type) . 'OrderBy';
 
         $this->builder->$type($this->key, $this->order);
 
-        $this->query = $this->query->builder($this->builder);
+        $type === 'OrderBy' && $type = 'orderBy';
 
-        return (string) $this->query->__toString();
+        return $this->query->builder($this->builder);
     }
 }

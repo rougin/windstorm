@@ -23,4 +23,20 @@ interface OrderInterface
      * @return \Rougin\Windstorm\QueryInterface
      */
     public function descending();
+
+    /**
+     * Calls a method from a QueryInterface instance.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return \Rougin\Windstorm\QueryInterface
+     */
+    public function __call($method, $parameters);
+
+    /**
+     * Calls a __toString() from a QueryInterface instance.
+     *
+     * @return string
+     */
+    public function __toString();
 }

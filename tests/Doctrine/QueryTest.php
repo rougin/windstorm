@@ -58,7 +58,7 @@ class QueryTest extends TestCase
 
     public function testDeleteFromMethod()
     {
-        $expected = 'DELETE FROM users u WHERE u.id = ?';
+        $expected = 'DELETE FROM users u WHERE u.id = :u_id';
 
         $query = new Query($this->builder);
 
@@ -69,7 +69,7 @@ class QueryTest extends TestCase
 
     public function testAndWhereMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE (u.name = ?) AND (u.active = 1)';
+        $expected = 'SELECT u.* FROM users u WHERE (u.name = :u_name) AND (u.active = 1)';
 
         $query = new Query($this->builder);
 
@@ -84,7 +84,7 @@ class QueryTest extends TestCase
 
     public function testOrWhereMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE (u.name = ?) OR (u.active = 1)';
+        $expected = 'SELECT u.* FROM users u WHERE (u.name = :u_name) OR (u.active = 1)';
 
         $query = new Query($this->builder);
 
@@ -112,7 +112,7 @@ class QueryTest extends TestCase
 
     public function testHavingMethod()
     {
-        $expected = 'SELECT u.* FROM users u HAVING u.name = ?';
+        $expected = 'SELECT u.* FROM users u HAVING u.name = :u_name';
 
         $query = new Query($this->builder);
 
@@ -125,7 +125,7 @@ class QueryTest extends TestCase
 
     public function testAndHavingMethod()
     {
-        $expected = 'SELECT u.* FROM users u HAVING (u.name = ?) AND (u.active = 1)';
+        $expected = 'SELECT u.* FROM users u HAVING (u.name = :u_name) AND (u.active = 1)';
 
         $query = new Query($this->builder);
 
@@ -140,7 +140,7 @@ class QueryTest extends TestCase
 
     public function testOrHavingMethod()
     {
-        $expected = 'SELECT u.* FROM users u HAVING (u.name = ?) OR (u.active = 1)';
+        $expected = 'SELECT u.* FROM users u HAVING (u.name = :u_name) OR (u.active = 1)';
 
         $query = new Query($this->builder);
 
@@ -181,7 +181,7 @@ class QueryTest extends TestCase
 
     public function testSqlMethod()
     {
-        $expected = 'DELETE FROM users u WHERE u.id = ?';
+        $expected = 'DELETE FROM users u WHERE u.id = :u_id';
 
         $query = new Query($this->builder);
 
@@ -194,7 +194,7 @@ class QueryTest extends TestCase
     {
         $query = new Query($this->builder);
 
-        $expected = array(1);
+        $expected = array(':u_id' => 1);
 
         $query = $query->deleteFrom('users')->where('id')->equals(1);
 
@@ -203,9 +203,9 @@ class QueryTest extends TestCase
 
     public function testTypesMethod()
     {
-        $query = new Query($this->builder);
+        $expected = array(':u_id' => 'integer');
 
-        $expected = array('integer');
+        $query = new Query($this->builder);
 
         $query = $query->deleteFrom('users')->where('id')->equals(1);
 

@@ -50,7 +50,8 @@ class Builder extends QueryBuilder
 
         $parts = $this->getQueryParts();
 
-        switch ($this->getType()) {
+        switch ($this->getType())
+        {
             case self::INSERT:
                 $sql = new InsertQuery($parts);
 
@@ -71,45 +72,5 @@ class Builder extends QueryBuilder
         }
 
         return (string) $sql->get();
-    }
-
-    /**
-     * Sets a new value for a column in a bulk update query.
-     *
-     * @param  string $key
-     * @param  mixed  $value
-     * @return self
-     */
-    public function set($key, $value)
-    {
-        $parameters = $this->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->setParameter($index, $value);
-
-        return $this->add('set', $key . ' = ?', true);
-    }
-
-    /**
-     * Specifies values for an insert query indexed by column names.
-     *
-     * @param  array  $values
-     * @return self
-     */
-    public function values(array $values)
-    {
-        $index = 0;
-
-        foreach ($values as $key => $value)
-        {
-            $this->setParameter($index, $value);
-
-            $index = $index + 1;
-
-            $values[$key] = '?';
-        }
-
-        return $this->add('values', $values);
     }
 }

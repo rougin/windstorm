@@ -6,7 +6,7 @@ class WhereTest extends TestCase
 {
     public function testEqualsMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id = ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.id = :u_id';
 
         $query = new Query($this->builder);
 
@@ -19,7 +19,7 @@ class WhereTest extends TestCase
 
     public function testNotEqualToMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id <> ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.id <> :u_id';
 
         $query = new Query($this->builder);
 
@@ -32,7 +32,7 @@ class WhereTest extends TestCase
 
     public function testGreaterThanMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id > ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.id > :u_id';
 
         $query = new Query($this->builder);
 
@@ -45,7 +45,7 @@ class WhereTest extends TestCase
 
     public function testGreaterThanOrEqualToMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id >= ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.id >= :u_id';
 
         $query = new Query($this->builder);
 
@@ -58,7 +58,7 @@ class WhereTest extends TestCase
 
     public function testInMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id IN (?, ?, ?)';
+        $expected = 'SELECT u.* FROM users u WHERE u.id IN (:u_id_0, :u_id_1, :u_id_2)';
 
         $query = new Query($this->builder);
 
@@ -71,7 +71,7 @@ class WhereTest extends TestCase
 
     public function testNotInMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id NOT IN (?, ?, ?)';
+        $expected = 'SELECT u.* FROM users u WHERE u.id NOT IN (:u_id_0, :u_id_1, :u_id_2)';
 
         $query = new Query($this->builder);
 
@@ -136,7 +136,7 @@ class WhereTest extends TestCase
 
     public function testLessThanMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id < ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.id < :u_id';
 
         $query = new Query($this->builder);
 
@@ -149,7 +149,7 @@ class WhereTest extends TestCase
 
     public function testLessThanOrEqualToMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id <= ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.id <= :u_id';
 
         $query = new Query($this->builder);
 
@@ -162,7 +162,7 @@ class WhereTest extends TestCase
 
     public function testLikeMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.name LIKE ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.name LIKE :u_name';
 
         $query = new Query($this->builder);
 
@@ -175,7 +175,7 @@ class WhereTest extends TestCase
 
     public function testNotLikeMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.name NOT LIKE ?';
+        $expected = 'SELECT u.* FROM users u WHERE u.name NOT LIKE :u_name';
 
         $query = new Query($this->builder);
 

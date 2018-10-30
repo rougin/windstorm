@@ -99,13 +99,9 @@ class Query implements QueryInterface
      */
     public function innerJoin($table, $local, $foreign)
     {
-        $alias = $this->alias((string) $table);
+        list($alias, $where) = $this->condition($table, $local, $foreign);
 
-        list($current, $condition) = array($this->initial, '%s.%s = %s.%s');
-
-        $condition = sprintf($condition, $this->initial, $local, $alias, $foreign);
-
-        $this->builder->innerJoin($current, $table, $alias, $condition);
+        $this->builder->innerJoin($this->initial, $table, $alias, $where);
 
         return $this;
     }
@@ -120,13 +116,9 @@ class Query implements QueryInterface
      */
     public function leftJoin($table, $local, $foreign)
     {
-        $alias = $this->alias((string) $table);
+        list($alias, $where) = $this->condition($table, $local, $foreign);
 
-        list($current, $condition) = array($this->initial, '%s.%s = %s.%s');
-
-        $condition = sprintf($condition, $this->initial, $local, $alias, $foreign);
-
-        $this->builder->leftJoin($current, $table, $alias, $condition);
+        $this->builder->leftJoin($this->initial, $table, $alias, $where);
 
         return $this;
     }
@@ -141,13 +133,9 @@ class Query implements QueryInterface
      */
     public function rightJoin($table, $local, $foreign)
     {
-        $alias = $this->alias((string) $table);
+        list($alias, $where) = $this->condition($table, $local, $foreign);
 
-        list($current, $condition) = array($this->initial, '%s.%s = %s.%s');
-
-        $condition = sprintf($condition, $this->initial, $local, $alias, $foreign);
-
-        $this->builder->rightJoin($current, $table, $alias, $condition);
+        $this->builder->rightJoin($this->initial, $table, $alias, $where);
 
         return $this;
     }
@@ -160,13 +148,7 @@ class Query implements QueryInterface
      */
     public function insertInto($table)
     {
-        $this->initial = '';
-
-        $this->table = '';
-
-        $this->builder->resetQueryParts();
-
-        $this->builder->setParameters(array());
+        $this->reset();
 
         return new Insert($this, $this->builder, $table);
     }
@@ -180,20 +162,15 @@ class Query implements QueryInterface
      */
     public function update($table, $alias = null)
     {
-        $this->builder->resetQueryParts();
+        $this->reset();
 
-        $this->builder->setParameters(array());
+        $initial = $this->alias($table);
 
-        if ($alias === null)
-        {
-            $alias = $table[0];
-        }
+        $this->initial = (string) $initial;
 
-        $this->initial = $alias;
+        $this->table = (string) $table;
 
-        $this->table = $table;
-
-        return new Update($this, $this->builder, $table, $alias);
+        return new Update($this, $this->builder, $table, $initial);
     }
 
     /**
@@ -205,20 +182,13 @@ class Query implements QueryInterface
      */
     public function deleteFrom($table, $alias = null)
     {
-        $this->builder->resetQueryParts();
+        $this->reset();
 
-        $this->builder->setParameters(array());
+        $this->initial = $this->alias((string) $table);
 
-        if ($alias === null)
-        {
-            $alias = $table[0];
-        }
+        $this->table = $table;
 
-        $this->initial = $alias;
-
-        $this->table = (string) $table;
-
-        $this->builder->delete($table, $alias);
+        $this->builder->delete($table, $this->initial);
 
         return $this;
     }
@@ -231,12 +201,7 @@ class Query implements QueryInterface
      */
     public function where($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Where($this, $this->builder, $key);
+        return new Where($this, $this->builder, $key, $this->initial);
     }
 
     /**
@@ -247,12 +212,7 @@ class Query implements QueryInterface
      */
     public function andWhere($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Where($this, $this->builder, $key, 'AND');
+        return new Where($this, $this->builder, $key, $this->initial, 'AND');
     }
 
     /**
@@ -263,12 +223,7 @@ class Query implements QueryInterface
      */
     public function orWhere($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Where($this, $this->builder, $key, 'OR');
+        return new Where($this, $this->builder, $key, $this->initial, 'OR');
     }
 
     /**
@@ -300,12 +255,7 @@ class Query implements QueryInterface
      */
     public function having($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Having($this, $this->builder, $key);
+        return new Having($this, $this->builder, $key, $this->initial);
     }
 
     /**
@@ -316,12 +266,7 @@ class Query implements QueryInterface
      */
     public function andHaving($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Having($this, $this->builder, $key, 'AND');
+        return new Having($this, $this->builder, $key, $this->initial, 'AND');
     }
 
     /**
@@ -332,12 +277,7 @@ class Query implements QueryInterface
      */
     public function orHaving($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Having($this, $this->builder, $key, 'OR');
+        return new Having($this, $this->builder, $key, $this->initial, 'OR');
     }
 
     /**
@@ -348,12 +288,7 @@ class Query implements QueryInterface
      */
     public function orderBy($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Order($this, $this->builder, $key);
+        return new Order($this, $this->builder, $key, $this->initial);
     }
 
     /**
@@ -364,20 +299,11 @@ class Query implements QueryInterface
      */
     public function andOrderBy($key)
     {
-        if (strpos($key, '.') === false)
-        {
-            $key = $this->initial . '.' . $key;
-        }
-
-        return new Order($this, $this->builder, $key, 'ADD');
+        return new Order($this, $this->builder, $key, $this->initial, 'ADD');
     }
 
     /**
      * Performs a LIMIT query.
-     *
-     * NOTE: If not supported by a database engine, it should
-     * having at least a query returning a limited result set
-     * and a query for returning a limited offset result.
      *
      * @param  integer      $limit
      * @param  integer|null $offset
@@ -456,5 +382,42 @@ class Query implements QueryInterface
         }
 
         return (string) $result;
+    }
+
+    /**
+     * Returns a JOIN condition.
+     *
+     * @param  string $table
+     * @param  string $local
+     * @param  string $foreign
+     * @return string
+     */
+    protected function condition($table, $local, $foreign)
+    {
+        $condition = (string) $this->initial . '.' . $local;
+
+        $alias = $this->alias((string) $table);
+
+        $condition .= ' = ' . $alias . '.' . $foreign;
+
+        return array($alias, (string) $condition);
+    }
+
+    /**
+     * Resets the whole query builder.
+     *
+     * @return self
+     */
+    public function reset()
+    {
+        $this->initial = (string) '';
+
+        $this->builder->resetQueryParts();
+
+        $this->table = (string) '';
+
+        $this->builder->setParameters(array());
+
+        return $this;        
     }
 }

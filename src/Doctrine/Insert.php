@@ -54,7 +54,18 @@ class Insert implements InsertInterface
     {
         $this->builder->insert($this->table);
 
-        $this->builder->values((array) $data);
+        $index = 0;
+
+        foreach ($data as $key => $value)
+        {
+            $this->builder->setParameter($index, $value);
+
+            $index = $index + 1;
+
+            $data[$key] = (string) '?';
+        }
+
+        $this->builder->add('values', (array) $data);
 
         return $this->query->builder($this->builder);
     }

@@ -6,7 +6,7 @@ class UpdateTest extends TestCase
 {
     public function testSetMethod()
     {
-        $expected = 'UPDATE users u SET name = ? WHERE u.id = ?';
+        $expected = 'UPDATE users u SET name = :name WHERE u.id = :u_id';
 
         $query = new Query($this->builder);
 

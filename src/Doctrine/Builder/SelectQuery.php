@@ -59,12 +59,16 @@ class SelectQuery
      */
     public function get()
     {
-        $query = 'SELECT ' . (string) implode(', ', $this->parts['select']);
+        $query = 'SELECT ' . (string) implode(', ', (array) $this->parts['select']);
 
         $query .= $this->parts['from'] ? ' FROM ' . (string) implode(', ', $this->clauses()) : '';
-        $query .= $this->parts['where'] !== null ? ' WHERE ' . ((string) $this->parts['where']) : '';
+
+        $query .= $this->parts['where'] !== null ? ' WHERE ' . $this->parts['where'] : '';
+
         $query .= $this->parts['groupBy'] ? ' GROUP BY ' . implode(', ', $this->parts['groupBy']) : '';
-        $query .= $this->parts['having'] !== null ? ' HAVING ' . ((string) $this->parts['having']) : '';
+
+        $query .= $this->parts['having'] !== null ? ' HAVING ' . $this->parts['having'] : '';
+
         $query .= $this->parts['orderBy'] ? ' ORDER BY ' . implode(', ', $this->parts['orderBy']) : '';
 
         if ($this->max !== null || $this->first !== null)
@@ -131,6 +135,7 @@ class SelectQuery
             }
 
             $sql .= ' ' . strtoupper($join['joinType']) . ' JOIN ' . $join['joinTable'];
+
             $sql .= ' ' . $join['joinAlias'] . ' ON ' . ((string) $join['joinCondition']);
 
             $aliases[$join['joinAlias']] = true;

@@ -20,7 +20,7 @@ class Where implements WhereInterface
     protected $builder;
 
     /**
-     * @var \Rougin\Windstorm\Doctrine\Expression
+     * @var \Rougin\Windstorm\Doctrine\Builder\Expression
      */
     protected $expression;
 
@@ -50,15 +50,21 @@ class Where implements WhereInterface
      * @param \Rougin\Windstorm\Doctrine\Query   $query
      * @param \Rougin\Windstorm\Doctrine\Builder $builder
      * @param string                             $key
+     * @param string                             $initial
      * @param string                             $type
      */
-    public function __construct(Query $query, Builder $builder, $key, $type = '')
+    public function __construct(Query $query, Builder $builder, $key, $initial, $type = '')
     {
         $this->builder = $builder;
 
         $this->expression = new Expression;
 
         $this->query = $query;
+
+        if (strpos($key, '.') === false)
+        {
+            $key = $initial . '.' . $key;
+        }
 
         $this->key = $key;
 
@@ -73,15 +79,9 @@ class Where implements WhereInterface
      */
     public function equals($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->eq($this->key, '?');
+        $expr = $this->expression->eq($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -96,15 +96,9 @@ class Where implements WhereInterface
      */
     public function notEqualTo($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->neq($this->key, '?');
+        $expr = $this->expression->neq($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -119,15 +113,9 @@ class Where implements WhereInterface
      */
     public function greaterThan($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->gt($this->key, '?');
+        $expr = $this->expression->gt($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -142,15 +130,9 @@ class Where implements WhereInterface
      */
     public function greaterThanOrEqualTo($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->gte($this->key, '?');
+        $expr = $this->expression->gte($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -165,22 +147,9 @@ class Where implements WhereInterface
      */
     public function in(array $values)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($keys, $type) = $this->parameters($values);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        foreach (array_values($values) as $key => $value)
-        {
-            $this->builder->setParameter($index + $key, $value, gettype($value));
-        }
-
-        $new = str_repeat('? ', count($values));
-
-        $new = (array) explode(' ', trim($new));
-
-        $expr = $this->expression->in($this->key, $new);
+        $expr = $this->expression->in($this->key, $keys);
 
         $this->builder->$type($expr);
 
@@ -195,22 +164,9 @@ class Where implements WhereInterface
      */
     public function notIn(array $values)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($keys, $type) = $this->parameters($values);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        foreach (array_values($values) as $key => $value)
-        {
-            $this->builder->setParameter($index + $key, $value, gettype($value));
-        }
-
-        $new = str_repeat('? ', count($values));
-
-        $new = (array) explode(' ', trim($new));
-
-        $expr = $this->expression->notIn($this->key, $new);
+        $expr = $this->expression->notIn($this->key, $keys);
 
         $this->builder->$type($expr);
 
@@ -256,9 +212,9 @@ class Where implements WhereInterface
      */
     public function isNull()
     {
-        $type = strtolower($this->type) . $this->method;
-
         $expr = $this->expression->isNull($this->key);
+
+        $type = strtolower($this->type) . $this->method;
 
         $this->builder->$type($expr);
 
@@ -272,9 +228,9 @@ class Where implements WhereInterface
      */
     public function isTrue()
     {
-        $type = strtolower($this->type) . $this->method;
-
         $expr = $this->expression->eq($this->key, 1);
+
+        $type = strtolower($this->type) . $this->method;
 
         $this->builder->$type($expr);
 
@@ -289,15 +245,9 @@ class Where implements WhereInterface
      */
     public function lessThan($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->lt($this->key, '?');
+        $expr = $this->expression->lt($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -312,15 +262,9 @@ class Where implements WhereInterface
      */
     public function lessThanOrEqualTo($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->lte($this->key, '?');
+        $expr = $this->expression->lte($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -335,15 +279,9 @@ class Where implements WhereInterface
      */
     public function like($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->like($this->key, '?');
+        $expr = $this->expression->like($this->key, $key);
 
         $this->builder->$type($expr);
 
@@ -358,18 +296,53 @@ class Where implements WhereInterface
      */
     public function notLike($value)
     {
-        $type = strtolower($this->type) . $this->method;
+        list($key, $type) = $this->parameter($value);
 
-        $parameters = $this->builder->getParameters();
-
-        $index = count((array) $parameters);
-
-        $this->builder->setParameter($index, $value, gettype($value));
-
-        $expr = $this->expression->notLike($this->key, '?');
+        $expr = $this->expression->notLike($this->key, $key);
 
         $this->builder->$type($expr);
 
         return $this->query->builder($this->builder);
+    }
+
+    /**
+     * Sets a parameter placeholder in the builder.
+     *
+     * @param  mixed $value
+     * @return array
+     */
+    protected function parameter($value)
+    {
+        $key = $this->key[0] === ':' ? $this->key : ':' . $this->key;
+
+        $key = str_replace('.', '_', (string) $key);
+
+        $type = strtolower($this->type) . $this->method;
+
+        $this->builder->setParameter($key, $value, gettype($value));
+
+        return array((string) $key, (string) $type);
+    }
+
+    /**
+     * Sets an array of parameter placeholders in the builder.
+     *
+     * @param  array $values
+     * @return array
+     */
+    protected function parameters(array $values)
+    {
+        list($keys, $type) = array(array(), '');
+
+        $values = array_values((array) $values);
+
+        foreach ($values as $index => $value)
+        {
+            list($key, $type) = $this->parameter($value);
+
+            array_push($keys, $key . '_' . (int) $index);
+        }
+
+        return array((array) $keys, (string) $type);
     }
 }

@@ -38,13 +38,33 @@ class Update implements UpdateInterface
         $this->query = $query;
     }
 
+    /**
+     * Sets a new value for a column.
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     * @return self
+     */
     public function set($key, $value)
     {
-        $this->builder->set($key, $value);
+        $placeholder = $key[0] === ':' ? $key : ':' . $key;
+
+        $this->builder->setParameter($placeholder, $value);
+
+        $key = (string) $key . ' = ' . $placeholder;
+
+        $this->builder->add('set', (string) $key, true);
 
         return $this;
     }
 
+    /**
+     * Calls a method from a QueryInterface instance.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function __call($method, $parameters)
     {
         $this->query = $this->query->builder($this->builder);

@@ -18,4 +18,13 @@ interface UpdateInterface
      * @return self
      */
     public function set($key, $value);
+
+    /**
+     * Calls a method from a QueryInterface instance.
+     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return \Rougin\Windstorm\QueryInterface
+     */
+    public function __call($method, $parameters);
 }
