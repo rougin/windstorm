@@ -66,7 +66,7 @@ echo $query->sql();
 ```
 
 ``` bash
-SELECT u.id, u.name FROM users u WHERE u.name LIKE ? ORDER BY u.created_at DESC
+SELECT u.id, u.name FROM users u WHERE u.name LIKE :u_name ORDER BY u.created_at DESC
 ```
 
 #### Parameter bindings

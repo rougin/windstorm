@@ -5,6 +5,8 @@ namespace Rougin\Windstorm;
 /**
  * Query Factory
  *
+ * @method \Rougin\Windstorm\WhereInterface where($key)
+ *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */

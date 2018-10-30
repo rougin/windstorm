@@ -8,28 +8,6 @@ use Rougin\Windstorm\UpdateInterface;
 /**
  * Update Query
  *
- * @method \Rougin\Windstorm\QueryInterface select(array $fields)
- * @method \Rougin\Windstorm\QueryInterface from($table, $alias = null)
- * @method \Rougin\Windstorm\QueryInterface innerJoin($table, $local, $foreign)
- * @method \Rougin\Windstorm\QueryInterface leftJoin($table, $local, $foreign)
- * @method \Rougin\Windstorm\QueryInterface rightJoin($table, $local, $foreign)
- * @method \Rougin\Windstorm\InsertInterface insertInto($table)
- * @method \Rougin\Windstorm\UpdateInterface update($table, $alias = null)
- * @method \Rougin\Windstorm\QueryInterface deleteFrom($table, $alias = null)
- * @method \Rougin\Windstorm\WhereInterface where($key)
- * @method \Rougin\Windstorm\WhereInterface andWhere($key)
- * @method \Rougin\Windstorm\WhereInterface orWhere($key)
- * @method \Rougin\Windstorm\QueryInterface groupBy(array $fields)
- * @method \Rougin\Windstorm\HavingInterface having($key)
- * @method \Rougin\Windstorm\HavingInterface andHaving($key)
- * @method \Rougin\Windstorm\HavingInterface orHaving($key)
- * @method \Rougin\Windstorm\OrderInterface orderBy($key)
- * @method \Rougin\Windstorm\OrderInterface andOrderBy($key)
- * @method \Rougin\Windstorm\QueryInterface limit($limit, $offset = null)
- * @method \Rougin\Windstorm\QueryInterface sql()
- * @method \Rougin\Windstorm\QueryInterface bindings()
- * @method \Rougin\Windstorm\QueryInterface types()
- *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */

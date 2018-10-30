@@ -60,12 +60,12 @@ class Insert implements InsertInterface
         {
             $this->builder->setParameter($index, $value);
 
-            $index = $index + 1;
+            $data[$key] = '?';
 
-            $data[$key] = (string) '?';
+            $index = $index + 1;
         }
 
-        $this->builder->add('values', (array) $data);
+        $this->builder->add('values', /** @scrutinizer ignore-type */ $data);
 
         return $this->query->builder($this->builder);
     }
