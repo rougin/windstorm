@@ -122,8 +122,6 @@ class Order implements OrderInterface
 
         $this->builder->$type($this->key, $this->order);
 
-        $type === 'OrderBy' && $type = 'orderBy';
-
         return $this->query->builder($this->builder);
     }
 }
