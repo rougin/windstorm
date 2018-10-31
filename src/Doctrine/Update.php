@@ -59,18 +59,15 @@ class Update implements UpdateInterface
     }
 
     /**
-     * Calls a method from a QueryInterface instance.
+     * Generates a WHERE query.
      *
-     * @param  string $method
-     * @param  array  $parameters
-     * @return \Rougin\Windstorm\QueryInterface
+     * @param  string $key
+     * @return \Rougin\Windstorm\WhereInterface
      */
-    public function __call($method, $parameters)
+    public function where($key)
     {
-        $this->query = $this->query->builder($this->builder);
+        $this->query->builder($this->builder);
 
-        $instance = array($this->query, (string) $method);
-
-        return call_user_func_array($instance, $parameters);
+        return $this->query->where($key);
     }
 }
