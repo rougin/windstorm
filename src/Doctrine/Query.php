@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Rougin\Windstorm\Doctrine\Builder;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
@@ -42,9 +42,9 @@ class Query implements QueryInterface
     /**
      * Initializes the query instance.
      *
-     * @param \Rougin\Windstorm\Doctrine\Builder $builder
+     * @param \Doctrine\DBAL\Query\QueryBuilder $builder
      */
-    public function __construct(Builder $builder)
+    public function __construct(QueryBuilder $builder)
     {
         $this->builder = $builder;
     }
@@ -322,10 +322,10 @@ class Query implements QueryInterface
     /**
      * Sets the Builder instance.
      *
-     * @param  \Rougin\Windstorm\Doctrine\Builder $builder
+     * @param  \Doctrine\DBAL\Query\QueryBuilder $builder
      * @return self
      */
-    public function builder(Builder $builder)
+    public function builder(QueryBuilder $builder)
     {
         $this->builder = $builder;
 

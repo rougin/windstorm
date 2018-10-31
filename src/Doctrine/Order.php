@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Rougin\Windstorm\Doctrine\Builder;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\OrderInterface;
 
 /**
@@ -14,7 +14,7 @@ use Rougin\Windstorm\OrderInterface;
 class Order implements OrderInterface
 {
     /**
-     * @var \Rougin\Windstorm\Doctrine\Builder
+     * @var \Doctrine\DBAL\Query\QueryBuilder
      */
     protected $builder;
 
@@ -41,13 +41,13 @@ class Order implements OrderInterface
     /**
      * Initializes the query instance.
      *
-     * @param \Rougin\Windstorm\Doctrine\Query   $query
-     * @param \Rougin\Windstorm\Doctrine\Builder $builder
-     * @param string                             $key
-     * @param string                             $initial
-     * @param string                             $type
+     * @param \Rougin\Windstorm\Doctrine\Query  $query
+     * @param \Doctrine\DBAL\Query\QueryBuilder $builder
+     * @param string                            $key
+     * @param string                            $initial
+     * @param string                            $type
      */
-    public function __construct(Query $query, Builder $builder, $key, $initial, $type = '')
+    public function __construct(Query $query, QueryBuilder $builder, $key, $initial, $type = '')
     {
         if (strpos($key, '.') === false)
         {

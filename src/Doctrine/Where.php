@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Rougin\Windstorm\Doctrine\Builder;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\Doctrine\Builder\Expression;
 use Rougin\Windstorm\WhereInterface;
 
@@ -15,7 +15,7 @@ use Rougin\Windstorm\WhereInterface;
 class Where implements WhereInterface
 {
     /**
-     * @var \Rougin\Windstorm\Doctrine\Builder
+     * @var \Doctrine\DBAL\Query\QueryBuilder
      */
     protected $builder;
 
@@ -47,13 +47,13 @@ class Where implements WhereInterface
     /**
      * Initializes the query instance.
      *
-     * @param \Rougin\Windstorm\Doctrine\Query   $query
-     * @param \Rougin\Windstorm\Doctrine\Builder $builder
-     * @param string                             $key
-     * @param string                             $initial
-     * @param string                             $type
+     * @param \Rougin\Windstorm\Doctrine\Query  $query
+     * @param \Doctrine\DBAL\Query\QueryBuilder $builder
+     * @param string                            $key
+     * @param string                            $initial
+     * @param string                            $type
      */
-    public function __construct(Query $query, Builder $builder, $key, $initial, $type = '')
+    public function __construct(Query $query, QueryBuilder $builder, $key, $initial, $type = '')
     {
         $this->builder = $builder;
 

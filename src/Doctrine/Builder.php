@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\Doctrine\Builder\DeleteQuery;
 use Rougin\Windstorm\Doctrine\Builder\InsertQuery;
@@ -25,15 +25,10 @@ class Builder extends QueryBuilder
     /**
      * Initializes the platform instance.
      *
-     * @param \Doctrine\DBAL\Connection|\Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
      */
-    public function __construct($platform)
+    public function __construct(AbstractPlatform $platform)
     {
-        if ($platform instanceof Connection)
-        {
-            $platform = $platform->getDatabasePlatform();
-        }
-
         $this->platform = $platform;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\Doctrine\Builder;
 use Rougin\Windstorm\InsertInterface;
 
@@ -14,7 +15,7 @@ use Rougin\Windstorm\InsertInterface;
 class Insert implements InsertInterface
 {
     /**
-     * @var \Rougin\Windstorm\Doctrine\Builder
+     * @var \Doctrine\DBAL\Query\QueryBuilder
      */
     protected $builder;
 
@@ -31,11 +32,11 @@ class Insert implements InsertInterface
     /**
      * Initializes the query instance.
      *
-     * @param \Rougin\Windstorm\Doctrine\Query   $query
-     * @param \Rougin\Windstorm\Doctrine\Builder $builder
-     * @param string                             $table
+     * @param \Rougin\Windstorm\Doctrine\Query  $query
+     * @param \Doctrine\DBAL\Query\QueryBuilder $builder
+     * @param string                            $table
      */
-    public function __construct(Query $query, Builder $builder, $table)
+    public function __construct(Query $query, QueryBuilder $builder, $table)
     {
         $this->builder = $builder;
 

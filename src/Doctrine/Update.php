@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Rougin\Windstorm\Doctrine\Builder;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Rougin\Windstorm\UpdateInterface;
 
 /**
@@ -19,7 +19,7 @@ class Update implements UpdateInterface
     protected $initial;
 
     /**
-     * @var \Rougin\Windstorm\Doctrine\Builder
+     * @var \Doctrine\DBAL\Query\QueryBuilder
      */
     protected $builder;
 
@@ -31,12 +31,12 @@ class Update implements UpdateInterface
     /**
      * Initializes the query instance.
      *
-     * @param \Rougin\Windstorm\Doctrine\Query   $query
-     * @param \Rougin\Windstorm\Doctrine\Builder $builder
-     * @param string                             $table
-     * @param string                             $initial
+     * @param \Rougin\Windstorm\Doctrine\Query  $query
+     * @param \Doctrine\DBAL\Query\QueryBuilder $builder
+     * @param string                            $table
+     * @param string                            $initial
      */
-    public function __construct(Query $query, Builder $builder, $table, $initial)
+    public function __construct(Query $query, QueryBuilder $builder, $table, $initial)
     {
         $this->builder = $builder->update($table, $initial);
 
