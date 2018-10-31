@@ -21,9 +21,9 @@ class Result implements ResultInterface
     protected $manager;
 
     /**
-     * @var \Doctrine\ORM\Query\ResultSetMapping
+     * @var \Doctrine\ORM\Query\ResultSetMapping|null
      */
-    protected $mapping;
+    protected $mapping = null;
 
     /**
      * Initializes the entity manager instance.
@@ -53,18 +53,28 @@ class Result implements ResultInterface
      * @param  array  $types
      * @return mixed
      */
-    public function execute($sql, array $parameters, array $types)
+    public function execute($sql, array $bindings, array $types)
     {
         $connection = $this->manager->getConnection();
 
         if (strpos($sql, 'SELECT') === false)
         {
-            return $connection->executeUpdate($sql, $parameters, $types);
+            return $connection->executeUpdate($sql, $bindings, $types);
+        }
+
+        if ($this->mapping === null)
+        {
+            return $connection->executeQuery($sql, $bindings, $types);
         }
 
         $query = new NativeQuery($this->manager);
 
         $query->setSql($sql)->setResultSetMapping($this->mapping);
+
+        foreach ($bindings as $key => $binding)
+        {
+            $query->setParameter($key, $binding, $types[$key]);
+        }
 
         return (array) $query->getResult();
     }

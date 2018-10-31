@@ -39,19 +39,18 @@ $query = new Query($builder);
 If the platform needs to came from a database connection, use the `Doctrine\DBAL\Query\QueryBuilder` instance:
 
 ``` php
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Query\QueryBuilder;
+// $connection instanceof \Doctrine\DBAL\Connection
+
 use Rougin\Windstorm\Doctrine\Query;
 
-// https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/configuration.html#configuration
-$connection = DriverManager::getConnection($database);
-
-$query = new Query(new QueryBuilder($connection));
+$query = new Query($connection->createQueryBuilder());
 ```
 
 ### Query Builder
 
 ``` php
+// SELECT u.id, u.name FROM users u WHERE u.name LIKE :u_name ORDER BY u.created_at DESC
+
 $query = $query
 ->select(array('u.id', 'u.name'))
 ->from('users')
@@ -59,27 +58,46 @@ $query = $query
 ->orderBy('created_at')->descending();
 ```
 
-#### Compiled raw SQL
+If there are is no alias defined in the second parameter of `from`, it will automatically get the first character of the specified table. So it is recommended to add the alias of the base table when selecting specific fields in `select`.
+
+### Results
+
+To return the results from a defined query, an instance must be implement in `ResultInterface`.
 
 ``` php
-echo $query->sql();
+// $manager instanceof Doctrine\ORM\EntityManager
+// $query instanceof Rougin\Windstorm\QueryInterface
+
+use Rougin\Windstorm\Doctrine\Result;
+
+$query = $query->select(['u.*'])->from('users');
+
+$result = $query->result(new Result($manager));
+
+$items = $result->fetchAll(\PDO::FETCH_ASSOC);
 ```
 
-``` bash
-SELECT u.id, u.name FROM users u WHERE u.name LIKE :u_name ORDER BY u.created_at DESC
-```
-
-#### Parameter bindings
-
-``` php
-print_r($query->bindings());
-```
-
-``` bash
-Array
-(
-    [0] => %winds%
-)
+``` json
+[
+    {
+        "id": "1",
+        "name": "Windstorm",
+        "created_at": "2018-10-15 23:06:28",
+        "updated_at": null
+    }
+    {
+        "id": "2",
+        "name": "SQL Builder",
+        "created_at": "2018-10-15 23:09:47",
+        "updated_at": null,
+    }
+    {
+        "id": "3",
+        "name": "Rougin Gutib",
+        "created_at": "2018-10-15 23:14:45",
+        "updated_at": null,
+    }
+]
 ```
 
 ## Credits

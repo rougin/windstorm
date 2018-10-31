@@ -332,6 +332,11 @@ class Query implements QueryInterface
         return $this;
     }
 
+    public function execute(ResultInterface $result)
+    {
+        return $result->execute($this->sql(), $this->bindings(), $this->types());
+    }
+
     /**
      * Returns the safe and compiled SQL.
      *
@@ -342,13 +347,18 @@ class Query implements QueryInterface
         return $this->builder->getSql();
     }
 
+    /**
+     * Returns the SQL bindings specified.
+     *
+     * @return array
+     */
     public function bindings()
     {
         return $this->builder->getParameters();
     }
 
     /**
-     * Returns the SQL bindings specified.
+     * Returns the data types of the bindings.
      *
      * @return array
      */
