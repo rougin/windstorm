@@ -7,7 +7,7 @@ use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
 /**
- * Order Query
+ * Query
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
@@ -57,9 +57,7 @@ class Query implements QueryInterface
      */
     public function select(array $fields)
     {
-        $this->builder->resetQueryParts();
-
-        $this->builder->setParameters(array());
+        $this->reset();
 
         $this->builder->select($fields);
 
@@ -410,6 +408,10 @@ class Query implements QueryInterface
      */
     public function reset()
     {
+        $this->builder->setMaxResults(null);
+
+        $this->builder->setFirstResult(null);
+
         $this->initial = (string) '';
 
         $this->builder->resetQueryParts();
@@ -418,6 +420,6 @@ class Query implements QueryInterface
 
         $this->builder->setParameters(array());
 
-        return $this;        
+        return $this;
     }
 }
