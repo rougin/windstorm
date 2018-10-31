@@ -2,18 +2,27 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
+/**
+ * Update Test
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class UpdateTest extends TestCase
 {
+    /**
+     * Tests UpdateInterface::set.
+     *
+     * @return void
+     */
     public function testSetMethod()
     {
-        $expected = 'UPDATE users u SET name = :name WHERE u.id = :u_id';
+        $expected = 'UPDATE users u SET u.name = :u_name WHERE u.id = :u_id';
 
-        $query = new Query($this->builder);
+        $query = $this->query->update('users')->set('name', 'Windstorm');
 
-        $query = $query->update('users')->set('name', 'Windstorm');
+        $result = (string) $query->where('id')->equals(1)->sql();
 
-        $query = $query->where('id')->equals(1);
-
-        $this->assertEquals($expected, $query->__toString());
+        $this->assertEquals($expected, $result);
     }
 }

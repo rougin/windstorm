@@ -5,8 +5,6 @@ namespace Rougin\Windstorm;
 /**
  * Query Factory
  *
- * @method \Rougin\Windstorm\WhereInterface where($key)
- *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
@@ -63,8 +61,10 @@ class QueryFactory
      * @param  array   $fields
      * @return \Rougin\Windstorm\QueryInterface
      */
-    public function find($id, $fields = array('*'))
+    public function find($id, $fields = array())
     {
+        empty($fields) && $fields = array($this->table[0] . '.*');
+
         $query = $this->query->select($fields)->from($this->table);
 
         return $query->where('id')->equals((integer) $id)->limit(1);
@@ -78,8 +78,10 @@ class QueryFactory
      * @param  array   $fields
      * @return \Rougin\Windstorm\QueryInterface
      */
-    public function paginate($limit = 10, $offset = 0, $fields = array('*'))
+    public function paginate($limit = 10, $offset = 0, $fields = array())
     {
+        empty($fields) && $fields = array($this->table[0] . '.*');
+
         $query = $this->query->select($fields)->from($this->table);
 
         return $query->limit((integer) $limit, (integer) $offset);

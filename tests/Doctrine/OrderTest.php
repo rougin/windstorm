@@ -2,57 +2,75 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
+/**
+ * Order Test
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class OrderTest extends TestCase
 {
+    /**
+     * Tests OrderInterface::ascending.
+     *
+     * @return void
+     */
     public function testAscendingMethod()
     {
         $expected = 'SELECT u.* FROM users u ORDER BY u.name ASC';
 
-        $query = new Query($this->builder);
+        $query = $this->query->select(array('u.*'))->from('users');
 
-        $query = $query->select(array('u.*'))->from('users');
+        $result = $query->orderBy('name')->ascending()->sql();
 
-        $query = $query->orderBy('name')->ascending();
-
-        $this->assertEquals($expected, $query->__toString());
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Tests OrderInterface::descending.
+     *
+     * @return void
+     */
     public function testDescendingMethod()
     {
         $expected = 'SELECT u.* FROM users u ORDER BY u.name DESC';
 
-        $query = new Query($this->builder);
+        $query = $this->query->select(array('u.*'))->from('users');
 
-        $query = $query->select(array('u.*'))->from('users');
+        $result = $query->orderBy('name')->descending()->sql();
 
-        $query = $query->orderBy('name')->descending();
-
-        $this->assertEquals($expected, $query->__toString());
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Tests OrderInterface::__call.
+     *
+     * @return void
+     */
     public function testCallMagicMethod()
     {
         $expected = 'SELECT u.* FROM users u ORDER BY u.name ASC';
 
-        $query = new Query($this->builder);
+        $query = $this->query->select(array('u.*'));
 
-        $query = $query->select(array('u.*'))->from('users');
+        $result = $query->from('users')->orderBy('name')->sql();
 
-        $query = $query->orderBy('name');
-
-        $this->assertEquals($expected, (string) $query->sql());
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * Tests OrderInterface::__toString.
+     *
+     * @return void
+     */
     public function testToStringMagicMethod()
     {
         $expected = 'SELECT u.* FROM users u ORDER BY u.name ASC';
 
-        $query = new Query($this->builder);
+        $query = $this->query->select(array('u.*'));
 
-        $query = $query->select(array('u.*'))->from('users');
+        $result = (string) $query->from('users')->orderBy('name');
 
-        $query = $query->orderBy('name');
-
-        $this->assertEquals($expected, $query->__toString());
+        $this->assertEquals($expected, $result);
     }
 }

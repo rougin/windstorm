@@ -2,18 +2,29 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
+/**
+ * Insert Test
+ *
+ * @package Windstorm
+ * @author  Rougin Gutib <rougingutib@gmail.com>
+ */
 class InsertTest extends TestCase
 {
+    /**
+     * Tests InsertInterface::values.
+     *
+     * @return void
+     */
     public function testValuesMethod()
     {
         $expected = 'INSERT INTO users (name) VALUES (?)';
 
-        $query = new Query($this->builder);
-
         $data = array('name' => 'Doctrine');
 
-        $query = $query->insertInto('users')->values($data);
+        $query = $this->query->insertInto('users');
 
-        $this->assertEquals($expected, $query->__toString());
+        $result = $query->values($data)->sql();
+
+        $this->assertEquals($expected, $result);
     }
 }

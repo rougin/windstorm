@@ -14,6 +14,11 @@ use Rougin\Windstorm\UpdateInterface;
 class Update implements UpdateInterface
 {
     /**
+     * @var string
+     */
+    protected $initial;
+
+    /**
      * @var \Rougin\Windstorm\Doctrine\Builder
      */
     protected $builder;
@@ -36,6 +41,8 @@ class Update implements UpdateInterface
         $this->builder = $builder->update($table, $initial);
 
         $this->query = $query;
+
+        $this->initial = $initial;
     }
 
     /**
@@ -47,7 +54,14 @@ class Update implements UpdateInterface
      */
     public function set($key, $value)
     {
+        if (strpos($key, '.') === false)
+        {
+            $key = $this->initial . '.' . $key;
+        }
+
         $placeholder = $key[0] === ':' ? $key : ':' . $key;
+
+        $placeholder = str_replace('.', '_', $placeholder);
 
         $this->builder->setParameter($placeholder, $value);
 
