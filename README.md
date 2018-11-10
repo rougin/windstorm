@@ -75,7 +75,7 @@ $bindings = $query->bindings();
 $types = $query->types();
 ```
 
-If there are is no alias defined in the second parameter of `from`, it will automatically get the first character of the specified table. With this, it is recommended to add the alias of the base table when selecting specific fields in `select`.
+If there are no alias defined in the second parameter of `from`, it will automatically get the first character of the specified table. With this, it is recommended to add the alias of the base table when selecting specific fields in `select`.
 
 ### Results
 
