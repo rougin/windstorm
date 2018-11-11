@@ -332,11 +332,6 @@ class Query implements QueryInterface
         return $this;
     }
 
-    public function execute(ResultInterface $result)
-    {
-        return $result->execute($this->sql(), $this->bindings(), $this->types());
-    }
-
     /**
      * Returns the safe and compiled SQL.
      *
@@ -365,6 +360,16 @@ class Query implements QueryInterface
     public function types()
     {
         return $this->builder->getParameterTypes();
+    }
+
+    /**
+     * Returns the instance of the query builder, if available.
+     *
+     * @return mixed
+     */
+    public function instance()
+    {
+        return $this->builder;
     }
 
     /**
@@ -416,7 +421,7 @@ class Query implements QueryInterface
      *
      * @return self
      */
-    public function reset()
+    protected function reset()
     {
         $this->builder->setMaxResults(null);
 

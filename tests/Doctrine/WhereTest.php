@@ -23,7 +23,7 @@ class WhereTest extends TestCase
 
         $result = (string) $query->where('id')->equals(1)->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -39,7 +39,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('id')->notEqualTo(1)->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -55,7 +55,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('id')->greaterThan(1)->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -71,7 +71,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('id')->greaterThanOrEqualTo(1)->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -87,7 +87,7 @@ class WhereTest extends TestCase
 
         $result = (string) $query->where('id')->in(array(1, 2, 3))->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -103,7 +103,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('id')->notIn(array(1, 2, 3))->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -119,7 +119,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('active')->isFalse()->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -135,7 +135,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('name')->isNotNull()->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -151,7 +151,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('name')->isNull()->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -167,7 +167,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('active')->isTrue()->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -183,7 +183,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('id')->lessThan(1)->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -199,7 +199,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('id')->lessThanOrEqualTo(1)->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -215,7 +215,7 @@ class WhereTest extends TestCase
 
         $result = $query->where('name')->like('%Doctrine%')->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -231,6 +231,6 @@ class WhereTest extends TestCase
 
         $result = $query->where('name')->notLike('%Doctrine%')->sql();
 
-        $this->assertEquals($expected, $query);
+        $this->assertEquals($expected, $result);
     }
 }

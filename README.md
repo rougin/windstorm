@@ -70,28 +70,30 @@ $sql = $query->sql();
 
 // array(':u_name' => '%winds%')
 $bindings = $query->bindings();
-
-// array(':u_name' => 'string');
-$types = $query->types();
 ```
 
 If there are no alias defined in the second parameter of `from`, it will automatically get the first character of the specified table. With this, it is recommended to add the alias of the base table when selecting specific fields in `select`.
 
-### Results
+### Returning results
 
-To return the results from a defined query, an instance must be implemented in `ResultInterface`.
+To return the results from a defined query, an instance must be implemented in `ExecuteInterface`.
 
 ``` php
 // $manager instanceof Doctrine\ORM\EntityManager
 // $query instanceof Rougin\Windstorm\QueryInterface
 
-use Rougin\Windstorm\Doctrine\Result;
+use Rougin\Windstorm\Doctrine\Execute;
 
-$query = $query->select(array('u.*'))->from('users');
+$execute = new Execute($manager);
 
-$result = $query->result(new Result($manager));
+$query = $query->select(array('u.*'));
 
-var_dump($result->fetchAll(\PDO::FETCH_ASSOC));
+$query = $query->from('users');
+
+// $result instanceof Rougin\Windstorm\ResultInterface
+$result = $execute->execute($query);
+
+var_dump((array) $result->items());
 ```
 
 ``` php
@@ -192,22 +194,28 @@ class UserEntity
 ```
 
 ``` php
+// $execute instanceof Rougin\Windstorm\Doctrine\Execute
 // $query instanceof Rougin\Windstorm\QueryInterface
-// $result instanceof Rougin\Windstorm\Doctrine\Result
+
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 $entity = 'Acme\Entities\User';
 
-$mapping = new ResultSetMappingBuilder($result->manager());
+$manager = $execute->manager();
+
+$mapping = new ResultSetMappingBuilder($manager);
 
 $mapping->addRootEntityFromClassMetadata($entity, 'users');
 
-$result->mapping($mapping);
+$execute->mapping($mapping);
 
-$query = $query->select(array('u.*'))->from('users');
+$query = $query->select(array('u.*'));
+
+$query = $query->from('users');
 
 $query = $query->where('name')->like('%SQL%');
 
-var_dump($query->execute($result));
+var_dump($execute->execute($query)->items());
 ```
 
 ``` php

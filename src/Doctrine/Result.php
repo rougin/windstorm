@@ -2,9 +2,7 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NativeQuery;
-use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\DBAL\Driver\PDOStatement;
 use Rougin\Windstorm\ResultInterface;
 
 /**
@@ -15,80 +13,39 @@ use Rougin\Windstorm\ResultInterface;
  */
 class Result implements ResultInterface
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $manager;
+    protected $data;
 
-    /**
-     * @var \Doctrine\ORM\Query\ResultSetMapping|null
-     */
-    protected $mapping = null;
+    protected $type = \PDO::FETCH_ASSOC;
 
-    /**
-     * Initializes the entity manager instance.
-     *
-     * @param \Doctrine\ORM\EntityManager $manager
-     */
-    public function __construct(EntityManager $manager)
+    public function __construct($data)
     {
-        $this->manager = $manager;
+        $this->data = $data;
     }
 
-    /**
-     * Returns the entity manager instance.
-     *
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function manager()
+    public function type($type)
     {
-        return $this->manager;
-    }
-
-    /**
-     * Executes an SQL statement with its bindings and types.
-     *
-     * @param  string $sql
-     * @param  array  $bindings
-     * @param  array  $types
-     * @return mixed
-     */
-    public function execute($sql, array $bindings, array $types)
-    {
-        $connection = $this->manager->getConnection();
-
-        if (strpos($sql, 'SELECT') === false)
-        {
-            return $connection->executeUpdate($sql, $bindings, $types);
-        }
-
-        if ($this->mapping === null)
-        {
-            return $connection->executeQuery($sql, $bindings, $types);
-        }
-
-        $query = new NativeQuery($this->manager);
-
-        $query->setSql($sql)->setResultSetMapping($this->mapping);
-
-        foreach ($bindings as $key => $binding)
-        {
-            $query->setParameter($key, $binding, $types[$key]);
-        }
-
-        return (array) $query->getResult();
-    }
-
-    /**
-     * Sets the result set mapping instance.
-     *
-     * @param  \Doctrine\ORM\Query\ResultSetMapping $mapping
-     * @return self
-     */
-    public function mapping(ResultSetMapping $mapping)
-    {
-        $this->mapping = $mapping;
+        $this->type = $type;
 
         return $this;
+    }
+
+    public function first()
+    {
+        if ($this->data instanceof PDOStatement)
+        {
+            return $this->data->fetch($this->type);
+        }
+
+        return current($this->data);
+    }
+
+    public function items()
+    {
+        if ($this->data instanceof PDOStatement)
+        {
+            return $this->data->fetchAll($this->type);
+        }
+
+        return $this->data;
     }
 }

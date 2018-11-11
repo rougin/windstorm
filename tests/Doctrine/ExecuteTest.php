@@ -10,22 +10,17 @@ use Rougin\Windstorm\Fixture\UserEntity;
 use Rougin\Windstorm\Fixture\UserQuery;
 
 /**
- * Result Test
+ * Execute Test
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-class ResultTest extends \PHPUnit_Framework_TestCase
+class ExecuteTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Rougin\Windstorm\QueryFactory
+     * @var \Rougin\Windstorm\Doctrine\Execute
      */
-    protected $factory;
-
-    /**
-     * @var \Rougin\Windstorm\ResultInterface
-     */
-    protected $result;
+    protected $execute;
 
     /**
      * Sets up the query builder instance.
@@ -34,7 +29,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        list($paths, $root) = array(array(__DIR__ . '/..'), __DIR__ . '/..');
+        $paths = array($root = __DIR__ . '/..');
 
         $config = Setup::createAnnotationMetadataConfiguration($paths, true);
 
@@ -44,11 +39,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         $manager = EntityManager::create($database, $config);
 
-        $this->result = new Result($manager);
-
-        $builder = new QueryBuilder($manager->getConnection());
-
-        $this->factory = new UserQuery(new Query($builder));
+        $this->execute = new Execute($manager);
     }
 
     /**
@@ -58,13 +49,17 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteMethod()
     {
+        $query = new Query($this->builder());
+
+        $factory = new UserQuery($query);
+
         $expected = require __DIR__ . '/../Fixture/UserItems.php';
 
-        $query = $this->factory->paginate();
+        $query = $factory->paginate();
 
-        $result = $query->execute($this->result);
+        $result = $this->execute->execute($query);
 
-        $result = $result->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $result->items();
 
         $this->assertEquals($expected, $result);
     }
@@ -78,22 +73,33 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     {
         $entity = 'Rougin\Windstorm\Fixture\UserEntity';
 
-        $manager = $this->result->manager();
+        $manager = $this->execute->manager();
 
         $mapping = new ResultSetMappingBuilder($manager);
 
         $mapping->addRootEntityFromClassMetadata($entity, 'users');
 
-        $this->result->mapping($mapping);
+        $this->execute->mapping($mapping);
 
-        $expected = array(new UserEntity(2, 'SQL Builder'));
+        $factory = new UserQuery(new Query($this->builder()));
 
-        $query = $this->factory->paginate(10, 0);
+        $expected = new UserEntity(2, 'SQL Builder');
+
+        $query = $factory->paginate(10, 0);
 
         $query = $query->where('name')->like('%SQL%');
 
-        $result = $query->execute($this->result);
+        $result = $this->execute->execute($query)->first();
 
         $this->assertEquals($expected, $result);
+    }
+
+    protected function builder()
+    {
+        $manager = $this->execute->manager();
+
+        $connection = $manager->getConnection();
+
+        return new QueryBuilder($connection);
     }
 }

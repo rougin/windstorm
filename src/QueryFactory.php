@@ -51,7 +51,7 @@ class QueryFactory
     {
         $query = $this->query->deleteFrom($this->table);
 
-        return $query->where('id')->equals($id);
+        return $this->query->where('id')->equals($id);
     }
 
     /**
@@ -67,7 +67,7 @@ class QueryFactory
 
         $query = $this->query->select($fields)->from($this->table);
 
-        return $query->where('id')->equals((integer) $id)->limit(1);
+        return $this->query->where('id')->equals($id)->limit(1);
     }
 
     /**
@@ -84,7 +84,7 @@ class QueryFactory
 
         $query = $this->query->select($fields)->from($this->table);
 
-        return $query->limit((integer) $limit, (integer) $offset);
+        return $this->query->limit($limit, (integer) $offset);
     }
 
     /**
@@ -100,9 +100,9 @@ class QueryFactory
 
         foreach ((array) $data as $key => $value)
         {
-            $query = $query->set($key, $value);
+            $query = $query->set((string) $key, $value);
         }
 
-        return $query->where($primary)->equals($id);
+        return $this->query->where($primary)->equals($id);
     }
 }
