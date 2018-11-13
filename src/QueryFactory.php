@@ -51,7 +51,7 @@ class QueryFactory
     {
         $query = $this->query->deleteFrom($this->table);
 
-        return $this->query->where('id')->equals($id);
+        return $query->where('id')->equals($id);
     }
 
     /**
@@ -61,13 +61,11 @@ class QueryFactory
      * @param  array   $fields
      * @return \Rougin\Windstorm\QueryInterface
      */
-    public function find($id, $fields = array())
+    public function find($id, $fields = array('*'))
     {
-        empty($fields) && $fields = array($this->table[0] . '.*');
-
         $query = $this->query->select($fields)->from($this->table);
 
-        return $this->query->where('id')->equals($id)->limit(1);
+        return $query->where('id')->equals($id)->limit(1);
     }
 
     /**
@@ -78,13 +76,11 @@ class QueryFactory
      * @param  array   $fields
      * @return \Rougin\Windstorm\QueryInterface
      */
-    public function paginate($limit = 10, $offset = 0, $fields = array())
+    public function paginate($limit = 10, $offset = 0, $fields = array('*'))
     {
-        empty($fields) && $fields = array($this->table[0] . '.*');
-
         $query = $this->query->select($fields)->from($this->table);
 
-        return $this->query->limit($limit, (integer) $offset);
+        return $query->limit($limit, $offset);
     }
 
     /**
@@ -103,6 +99,6 @@ class QueryFactory
             $query = $query->set((string) $key, $value);
         }
 
-        return $this->query->where($primary)->equals($id);
+        return $query->where($primary)->equals($id);
     }
 }

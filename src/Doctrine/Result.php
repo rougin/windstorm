@@ -2,7 +2,6 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
-use Doctrine\DBAL\Driver\PDOStatement;
 use Rougin\Windstorm\ResultInterface;
 
 /**
@@ -22,6 +21,22 @@ class Result implements ResultInterface
         $this->data = $data;
     }
 
+    /**
+     * Returns a number of affected rows.
+     *
+     * @return integer
+     */
+    public function affected()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Sets the fetch type for PDO.
+     *
+     * @param  integer $type
+     * @return self
+     */
     public function type($type)
     {
         $this->type = $type;
@@ -29,9 +44,14 @@ class Result implements ResultInterface
         return $this;
     }
 
+    /**
+     * Returns the first row from result.
+     *
+     * @return mixed
+     */
     public function first()
     {
-        if ($this->data instanceof PDOStatement)
+        if ($this->data instanceof \PDOStatement)
         {
             return $this->data->fetch($this->type);
         }
@@ -39,9 +59,14 @@ class Result implements ResultInterface
         return current($this->data);
     }
 
+    /**
+     * Returns all items from the result.
+     *
+     * @return mixed
+     */
     public function items()
     {
-        if ($this->data instanceof PDOStatement)
+        if ($this->data instanceof \PDOStatement)
         {
             return $this->data->fetchAll($this->type);
         }

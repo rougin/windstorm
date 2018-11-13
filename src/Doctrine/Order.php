@@ -44,12 +44,12 @@ class Order implements OrderInterface
      * @param \Rougin\Windstorm\Doctrine\Query  $query
      * @param \Doctrine\DBAL\Query\QueryBuilder $builder
      * @param string                            $key
-     * @param string                            $initial
+     * @param string|null                       $initial
      * @param string                            $type
      */
     public function __construct(Query $query, QueryBuilder $builder, $key, $initial, $type = '')
     {
-        if (strpos($key, '.') === false)
+        if ($initial && strpos($key, '.') === false)
         {
             $key = $initial . '.' . $key;
         }

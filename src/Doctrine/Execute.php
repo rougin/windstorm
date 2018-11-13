@@ -50,7 +50,7 @@ class Execute implements ExecuteInterface
      * Executes an SQL statement with its bindings and types.
      *
      * @param  \Rougin\Windstorm\QueryInterface $query
-     * @return mixed
+     * @return \Rougin\Windstorm\ResultInterface
      */
     public function execute(QueryInterface $query)
     {

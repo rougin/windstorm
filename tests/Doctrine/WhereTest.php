@@ -17,9 +17,9 @@ class WhereTest extends TestCase
      */
     public function testEqualsMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id = :u_id';
+        $expected = 'SELECT * FROM users WHERE id = :id';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = (string) $query->where('id')->equals(1)->sql();
 
@@ -33,9 +33,9 @@ class WhereTest extends TestCase
      */
     public function testNotEqualToMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id <> :u_id';
+        $expected = 'SELECT * FROM users WHERE id <> :id';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('id')->notEqualTo(1)->sql();
 
@@ -49,9 +49,9 @@ class WhereTest extends TestCase
      */
     public function testGreaterThanMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id > :u_id';
+        $expected = 'SELECT * FROM users WHERE id > :id';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('id')->greaterThan(1)->sql();
 
@@ -65,9 +65,9 @@ class WhereTest extends TestCase
      */
     public function testGreaterThanOrEqualToMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id >= :u_id';
+        $expected = 'SELECT * FROM users WHERE id >= :id';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('id')->greaterThanOrEqualTo(1)->sql();
 
@@ -81,9 +81,9 @@ class WhereTest extends TestCase
      */
     public function testInMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id IN (:u_id_0, :u_id_1, :u_id_2)';
+        $expected = 'SELECT * FROM users WHERE id IN (:id_0, :id_1, :id_2)';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = (string) $query->where('id')->in(array(1, 2, 3))->sql();
 
@@ -97,9 +97,9 @@ class WhereTest extends TestCase
      */
     public function testNotInMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id NOT IN (:u_id_0, :u_id_1, :u_id_2)';
+        $expected = 'SELECT * FROM users WHERE id NOT IN (:id_0, :id_1, :id_2)';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('id')->notIn(array(1, 2, 3))->sql();
 
@@ -113,9 +113,9 @@ class WhereTest extends TestCase
      */
     public function testIsFalseMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.active = 0';
+        $expected = 'SELECT * FROM users WHERE active = 0';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('active')->isFalse()->sql();
 
@@ -129,9 +129,9 @@ class WhereTest extends TestCase
      */
     public function testIsNotNullMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.name IS NOT NULL';
+        $expected = 'SELECT * FROM users WHERE name IS NOT NULL';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('name')->isNotNull()->sql();
 
@@ -145,9 +145,9 @@ class WhereTest extends TestCase
      */
     public function testIsNullMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.name IS NULL';
+        $expected = 'SELECT * FROM users WHERE name IS NULL';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('name')->isNull()->sql();
 
@@ -161,9 +161,9 @@ class WhereTest extends TestCase
      */
     public function testIsTrueMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.active = 1';
+        $expected = 'SELECT * FROM users WHERE active = 1';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('active')->isTrue()->sql();
 
@@ -177,9 +177,9 @@ class WhereTest extends TestCase
      */
     public function testLessThanMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id < :u_id';
+        $expected = 'SELECT * FROM users WHERE id < :id';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('id')->lessThan(1)->sql();
 
@@ -193,9 +193,9 @@ class WhereTest extends TestCase
      */
     public function testLessThanOrEqualToMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.id <= :u_id';
+        $expected = 'SELECT * FROM users WHERE id <= :id';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('id')->lessThanOrEqualTo(1)->sql();
 
@@ -209,9 +209,9 @@ class WhereTest extends TestCase
      */
     public function testLikeMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.name LIKE :u_name';
+        $expected = 'SELECT * FROM users WHERE name LIKE :name';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('name')->like('%Doctrine%')->sql();
 
@@ -225,9 +225,9 @@ class WhereTest extends TestCase
      */
     public function testNotLikeMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE u.name NOT LIKE :u_name';
+        $expected = 'SELECT * FROM users WHERE name NOT LIKE :name';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->where('name')->notLike('%Doctrine%')->sql();
 

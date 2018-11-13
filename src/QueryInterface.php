@@ -183,7 +183,7 @@ interface QueryInterface
      *
      * @return array
      */
-    // public function types();
+    public function types();
 
     /**
      * Returns the instance of the query builder, if any.

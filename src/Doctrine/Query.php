@@ -15,14 +15,14 @@ use Rougin\Windstorm\ResultInterface;
 class Query implements QueryInterface
 {
     /**
-     * @var \Rougin\Windstorm\Doctrine\Builder
+     * @var \Doctrine\DBAL\Query\QueryBuilder
      */
     protected $builder;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $initial = '';
+    protected $initial = null;
 
     /**
      * @var string
@@ -73,11 +73,6 @@ class Query implements QueryInterface
      */
     public function from($table, $alias = null)
     {
-        if ($alias === null)
-        {
-            $alias = $table[0];
-        }
-
         $this->initial = $alias;
 
         $this->table = $table;
@@ -162,13 +157,9 @@ class Query implements QueryInterface
     {
         $this->reset();
 
-        $initial = $this->alias($table);
+        list($this->initial, $this->table) = array($alias, $table);
 
-        $this->initial = (string) $initial;
-
-        $this->table = (string) $table;
-
-        return new Update($this, $this->builder, $table, $initial);
+        return new Update($this, $this->builder, $table, $alias);
     }
 
     /**
@@ -182,7 +173,7 @@ class Query implements QueryInterface
     {
         $this->reset();
 
-        $this->initial = $this->alias((string) $table);
+        $this->initial = $alias;
 
         $this->table = $table;
 
@@ -232,14 +223,6 @@ class Query implements QueryInterface
      */
     public function groupBy(array $fields)
     {
-        foreach ($fields as $key => $field)
-        {
-            if (strpos($field, '.') === false)
-            {
-                $fields[$key] = $this->initial . '.' . $field;
-            }
-        }
-
         $this->builder->groupBy($fields);
 
         return $this;
@@ -407,7 +390,7 @@ class Query implements QueryInterface
      */
     protected function condition($table, $local, $foreign)
     {
-        $condition = (string) $this->initial . '.' . $local;
+        $condition = $this->initial . '.' . $local;
 
         $alias = $this->alias((string) $table);
 

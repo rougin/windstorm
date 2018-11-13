@@ -65,6 +65,32 @@ class ExecuteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests ResultInterface::execute with update.
+     *
+     * @depends testExecuteMethod
+     *
+     * @return void
+     */
+    public function testExecuteMethodWithUpdate()
+    {
+        $query = new Query($this->builder());
+
+        $factory = new UserQuery($query);
+
+        $data = array('name' => 'Windstorm');
+
+        $query = $factory->update(1, $data);
+
+        $result = $this->execute->execute($query);
+
+        $expected = 1;
+
+        $result = $result->affected();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * Tests ResultInterface::execute with mapping.
      *
      * @return void

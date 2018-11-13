@@ -17,9 +17,9 @@ class QueryTest extends TestCase
      */
     public function testSelectMethod()
     {
-        $expected = 'SELECT u.* FROM users u';
+        $expected = 'SELECT * FROM users';
 
-        $query = $this->query->select(array('u.*'));
+        $query = $this->query->select(array('*'));
 
         $result = $query->from('users')->sql();
 
@@ -35,7 +35,7 @@ class QueryTest extends TestCase
     {
         $expected = 'SELECT p.* FROM posts p INNER JOIN users u ON p.user_id = u.id';
 
-        $query = $this->query->select(array('p.*'))->from('posts');
+        $query = $this->query->select(array('p.*'))->from('posts', 'p');
 
         $result = $query->innerJoin('users', 'user_id', 'id')->sql();
 
@@ -51,7 +51,7 @@ class QueryTest extends TestCase
     {
         $expected = 'SELECT p.* FROM posts p LEFT JOIN users u ON p.user_id = u.id';
 
-        $query = $this->query->select(array('p.*'))->from('posts');
+        $query = $this->query->select(array('p.*'))->from('posts', 'p');
 
         $result = $query->leftJoin('users', 'user_id', 'id')->sql();
 
@@ -67,7 +67,7 @@ class QueryTest extends TestCase
     {
         $expected = 'SELECT p.* FROM posts p RIGHT JOIN users u ON p.user_id = u.id';
 
-        $query = $this->query->select(array('p.*'))->from('posts');
+        $query = $this->query->select(array('p.*'))->from('posts', 'p');
 
         $result = $query->rightJoin('users', 'user_id', 'id')->sql();
 
@@ -81,11 +81,27 @@ class QueryTest extends TestCase
      */
     public function testDeleteFromMethod()
     {
-        $expected = 'DELETE FROM users u WHERE u.id = :u_id';
+        $expected = 'DELETE FROM users WHERE id = :id';
 
         $query = $this->query->deleteFrom('users');
 
         $result = $query->where('id')->equals(1)->sql();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Tests QueryInterface::deleteFrom with table alias.
+     *
+     * @return void
+     */
+    public function testDeleteFromMethodWithTableAlias()
+    {
+        $expected = 'DELETE FROM users u WHERE u.id = :u_id';
+
+        $query = $this->query->deleteFrom('users', 'u');
+
+        $result = $query->where('u.id')->equals(1)->sql();
 
         $this->assertEquals($expected, $result);
     }
@@ -97,9 +113,9 @@ class QueryTest extends TestCase
      */
     public function testAndWhereMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE (u.name = :u_name) AND (u.active = 1)';
+        $expected = 'SELECT * FROM users WHERE (name = :name) AND (active = 1)';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $query = $query->where('name')->equals('Doctrine');
 
@@ -115,9 +131,9 @@ class QueryTest extends TestCase
      */
     public function testOrWhereMethod()
     {
-        $expected = 'SELECT u.* FROM users u WHERE (u.name = :u_name) OR (u.active = 1)';
+        $expected = 'SELECT * FROM users WHERE (name = :name) OR (active = 1)';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $query = $query->where('name')->equals('Doctrine');
 
@@ -133,9 +149,9 @@ class QueryTest extends TestCase
      */
     public function testGroupByMethod()
     {
-        $expected = 'SELECT u.* FROM users u GROUP BY u.active';
+        $expected = 'SELECT * FROM users GROUP BY active';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->groupBy(array('active'))->sql();
 
@@ -149,9 +165,9 @@ class QueryTest extends TestCase
      */
     public function testHavingMethod()
     {
-        $expected = 'SELECT u.* FROM users u HAVING u.name = :u_name';
+        $expected = 'SELECT * FROM users HAVING name = :name';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->having('name')->equals('Doctrine')->sql();
 
@@ -165,9 +181,9 @@ class QueryTest extends TestCase
      */
     public function testAndHavingMethod()
     {
-        $expected = 'SELECT u.* FROM users u HAVING (u.name = :u_name) AND (u.active = 1)';
+        $expected = 'SELECT * FROM users HAVING (name = :name) AND (active = 1)';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $query = $query->having('name')->equals('Doctrine');
 
@@ -183,9 +199,9 @@ class QueryTest extends TestCase
      */
     public function testOrHavingMethod()
     {
-        $expected = 'SELECT u.* FROM users u HAVING (u.name = :u_name) OR (u.active = 1)';
+        $expected = 'SELECT * FROM users HAVING (name = :name) OR (active = 1)';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $query = $query->having('name')->equals('Doctrine');
 
@@ -201,9 +217,9 @@ class QueryTest extends TestCase
      */
     public function testAndOrderByMethod()
     {
-        $expected = 'SELECT u.* FROM users u ORDER BY u.name ASC, u.age DESC';
+        $expected = 'SELECT * FROM users ORDER BY name ASC, age DESC';
 
-        $query = $this->query->select(array('u.*'))->from('users');
+        $query = $this->query->select(array('*'))->from('users');
 
         $result = $query->orderBy('name')->andOrderBy('age')->descending()->sql();
 
@@ -217,9 +233,9 @@ class QueryTest extends TestCase
      */
     public function testLimitMethod()
     {
-        $expected = 'SELECT u.* FROM users u LIMIT 10 OFFSET 20';
+        $expected = 'SELECT * FROM users LIMIT 10 OFFSET 20';
 
-        $query = $this->query->select(array('u.*'));
+        $query = $this->query->select(array('*'));
 
         $query = $query->from('users');
 
@@ -235,7 +251,7 @@ class QueryTest extends TestCase
      */
     public function testSqlMethod()
     {
-        $expected = 'DELETE FROM users u WHERE u.id = :u_id';
+        $expected = 'DELETE FROM users WHERE id = :id';
 
         $query = $this->query->deleteFrom('users');
 
@@ -251,7 +267,7 @@ class QueryTest extends TestCase
      */
     public function testBindingsMethod()
     {
-        $expected = array(':u_id' => (integer) 1);
+        $expected = array(':id' => (integer) 1);
 
         $query = $this->query->deleteFrom('users');
 
@@ -267,12 +283,26 @@ class QueryTest extends TestCase
      */
     public function testTypesMethod()
     {
-        $expected = array(':u_id' => (string) 'integer');
+        $expected = array(':id' => (string) 'integer');
 
         $query = $this->query->deleteFrom('users');
 
         $result = $query->where('id')->equals(1)->types();
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Tests QueryInterface::instance.
+     *
+     * @return void
+     */
+    public function testInstanceMethod()
+    {
+        $expected = 'Doctrine\DBAL\Query\QueryBuilder';
+        
+        $result = $this->query->instance();
+
+        $this->assertInstanceOf($expected, $result);
     }
 }

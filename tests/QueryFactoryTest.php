@@ -57,7 +57,7 @@ class QueryFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteMethod()
     {
-        $expected = 'DELETE FROM users u WHERE u.id = :u_id';
+        $expected = 'DELETE FROM users WHERE id = :id';
 
         $result = (string) $this->factory->delete(1)->sql();
 
@@ -71,9 +71,9 @@ class QueryFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindMethod()
     {
-        $expected = 'SELECT u.* FROM users u';
+        $expected = 'SELECT * FROM users';
 
-        $expected .= ' WHERE u.id = :u_id LIMIT 1';
+        $expected .= ' WHERE id = :id LIMIT 1';
 
         $result = $this->factory->find(1)->sql();
 
@@ -87,7 +87,7 @@ class QueryFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testPaginateMethod()
     {
-        $expected = 'SELECT u.* FROM users u';
+        $expected = 'SELECT * FROM users';
 
         $expected .= ' LIMIT 10 OFFSET 10';
 
@@ -105,9 +105,9 @@ class QueryFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $data = array('name' => 'Windstorm');
 
-        $expected = 'UPDATE users u SET u.name = :u_name';
+        $expected = 'UPDATE users SET name = :name';
 
-        $expected .= ' WHERE u.id = :u_id';
+        $expected .= ' WHERE id = :id';
 
         $result = $this->factory->update(1, $data)->sql();
 

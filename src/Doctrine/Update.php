@@ -34,7 +34,7 @@ class Update implements UpdateInterface
      * @param \Rougin\Windstorm\Doctrine\Query  $query
      * @param \Doctrine\DBAL\Query\QueryBuilder $builder
      * @param string                            $table
-     * @param string                            $initial
+     * @param string|null                       $initial
      */
     public function __construct(Query $query, QueryBuilder $builder, $table, $initial)
     {
@@ -54,7 +54,7 @@ class Update implements UpdateInterface
      */
     public function set($key, $value)
     {
-        if (strpos($key, '.') === false)
+        if ($this->initial && strpos($key, '.') === false)
         {
             $key = $this->initial . '.' . $key;
         }
