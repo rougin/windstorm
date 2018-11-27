@@ -18,6 +18,14 @@ interface ResultInterface
     public function affected();
 
     /**
+     * Returns a result from a query instance.
+     *
+     * @param  \Rougin\Windstorm\QueryInterface $query
+     * @return self
+     */
+    public function execute(QueryInterface $query);
+
+    /**
      * Returns the first row from result.
      *
      * @return mixed
