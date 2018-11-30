@@ -30,9 +30,7 @@ use Rougin\Windstorm\Doctrine\Query;
 
 // $platform instanceof AbstractPlatform
 
-$builder = new Builder($platform);
-
-$query = new Query($builder);
+$query = new Query(new Builder($platform));
 ```
 
 List of supported platforms: https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/platforms.html
@@ -72,31 +70,28 @@ $sql = $query->sql();
 $bindings = $query->bindings();
 ```
 
-If there are no alias defined in the second parameter of `from`, it will automatically get the first character of the specified table. With this, it is recommended to add the alias of the base table when selecting specific fields in `select`.
-
 ### Returning results
 
-To return the results from a defined query, an instance must be implemented in `ExecuteInterface`.
+To return the results from a defined query, an instance must be implemented in `ResultInterface`.
 
 ``` php
-// $manager instanceof Doctrine\ORM\EntityManager
+// $connection instanceof Doctrine\DBAL\Connection
 // $query instanceof Rougin\Windstorm\QueryInterface
 
-use Rougin\Windstorm\Doctrine\Execute;
+use Rougin\Windstorm\Doctrine\Result;
 
-$execute = new Execute($manager);
+$execute = new Result($connection);
 
 $query = $query->select(array('u.*'));
 
 $query = $query->from('users');
 
-// $result instanceof Rougin\Windstorm\ResultInterface
 $result = $execute->execute($query);
 
 var_dump((array) $result->items());
 ```
 
-``` php
+``` bash
 array(3) {
   [0] =>
   array(4) {
@@ -134,99 +129,71 @@ array(3) {
 }
 ```
 
-If `doctrine/orm` is installed, the `Rougin\Windstorm\Doctrine\Result` instance can set a `Doctrine\ORM\Query\ResultSetMapping` instance to put the results into user-defined entities:
+### QueryRepository and mutators
+
+The `QueryRepository` instance is a special class that will mutate the `QueryInterface` through the use the mutators. The logic is loosely based on a [specification design pattern](https://en.wikipedia.org/wiki/Specification_pattern).
 
 ``` php
-namespace Acme\Entities;
+// $query instanceof Rougin\Windstorm\QueryInterface;
+// $result instanceof Rougin\Windstorm\ResultInterface;
 
-/**
- * @Entity
- * @Table(name="users")
- */
-class UserEntity
+use Rougin\Windstorm\Mutators\ReturnEntity;
+use Rougin\Windstorm\Mutators\ReturnEntities;
+
+$query = $query->select(['*'])->from('users');
+
+$query = new QueryRepository($query, $result);
+
+$query = $query->mutate(new ReturnEntity(1));
+
+var_dump($query->first());
+```
+
+``` bash
+array(4) {
+  'id' =>
+  string(1) "1"
+  'name' =>
+  string(9) "Windstorm"
+  'created_at' =>
+  string(19) "2018-10-15 23:06:28"
+  'updated_at' =>
+  NULL
+}
+```
+
+To map the result into a class, implement a mapper into a `MapperInterface`:
+
+``` php
+namespace Acme\Mappers;
+
+use Acme\Models\User;
+
+class UserMapper implements MapperInterface
 {
-    /**
-     * @Id @GeneratedValue
-     * @Column(name="id", type="integer", length=10, nullable=false, unique=false)
-     * @var integer
-     */
-    protected $id;
-
-    /**
-     * @Column(name="name", type="string", length=200, nullable=false, unique=false)
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * Initializes the entity instance.
-     *
-     * @param integer $id
-     * @param string  $name
-     */
-    public function __construct($id, $name)
+    public function map(array $data)
     {
-        $this->id = $id;
-
-        $this->name = $name;
-    }
-
-    /**
-     * Returns the ID.
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Returns the name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        return new User($data['id'], $data['name']);
     }
 }
 ```
 
 ``` php
-// $execute instanceof Rougin\Windstorm\Doctrine\Execute
-// $query instanceof Rougin\Windstorm\QueryInterface
+// $query instanceof Rougin\Windstorm\QueryRepository;
 
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Acme\Mappers\UserMapper;
 
-$entity = 'Acme\Entities\User';
+$query->mapper(new UserMapper);
 
-$manager = $execute->manager();
-
-$mapping = new ResultSetMappingBuilder($manager);
-
-$mapping->addRootEntityFromClassMetadata($entity, 'users');
-
-$execute->mapping($mapping);
-
-$query = $query->select(array('u.*'));
-
-$query = $query->from('users');
-
-$query = $query->where('name')->like('%SQL%');
-
-var_dump($execute->execute($query)->items());
+var_dump($query->first());
 ```
 
-``` php
-array(1) {
-  [0] =>
-  class Acme\Entities\User#7086 (2) {
-    protected $id =>
-    int(2)
-    protected $name =>
-    string(11) "SQL Builder"
-  }
+``` bash
+class Acme\Models\User#11 (2) {
+  protected $id =>
+  string(1) "1"
+  protected $name =>
+  string(6) "Windstorm"
 }
 ```
 
