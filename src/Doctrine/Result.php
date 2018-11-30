@@ -2,6 +2,8 @@
 
 namespace Rougin\Windstorm\Doctrine;
 
+use Doctrine\DBAL\Connection;
+use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
 /**
@@ -12,13 +14,24 @@ use Rougin\Windstorm\ResultInterface;
  */
 class Result implements ResultInterface
 {
-    protected $data;
+    /**
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $connection;
 
-    protected $type = \PDO::FETCH_ASSOC;
+    /**
+     * @var \PDOStatement
+     */
+    protected $result;
 
-    public function __construct($data)
+    /**
+     * Initializes the result instance.
+     *
+     * @param \Doctrine\DBAL\Connection $connection
+     */
+    public function __construct(Connection $connection)
     {
-        $this->data = $data;
+        $this->connection = $connection;
     }
 
     /**
@@ -28,18 +41,31 @@ class Result implements ResultInterface
      */
     public function affected()
     {
-        return $this->data;
+        return $this->result->rowCount();
     }
 
     /**
-     * Sets the fetch type for PDO.
+     * Returns a result from a query instance.
      *
-     * @param  integer $type
+     * @param  \Rougin\Windstorm\QueryInterface $query
      * @return self
      */
-    public function type($type)
+    public function execute(QueryInterface $query)
     {
-        $this->type = $type;
+        $bindings = $query->bindings();
+
+        $sql = $query->sql();
+
+        $types = (array) $query->types();
+
+        $connection = $this->connection;
+
+        if (strpos($sql, 'SELECT') === false)
+        {
+            $this->result = $connection->executeUpdate($sql, $bindings, $types);
+        }
+
+        $this->result = $connection->executeQuery($sql, $bindings, $types);
 
         return $this;
     }
@@ -51,12 +77,7 @@ class Result implements ResultInterface
      */
     public function first()
     {
-        if ($this->data instanceof \PDOStatement)
-        {
-            return $this->data->fetch($this->type);
-        }
-
-        return current($this->data);
+        return $this->result->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -66,11 +87,6 @@ class Result implements ResultInterface
      */
     public function items()
     {
-        if ($this->data instanceof \PDOStatement)
-        {
-            return $this->data->fetchAll($this->type);
-        }
-
-        return $this->data;
+        return $this->result->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

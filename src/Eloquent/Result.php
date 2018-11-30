@@ -2,9 +2,8 @@
 
 namespace Rougin\Windstorm\Eloquent;
 
-use Illuminate\Database\Connection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
 /**
@@ -16,47 +15,50 @@ use Rougin\Windstorm\ResultInterface;
 class Result implements ResultInterface
 {
     /**
-     * @var \Illuminate\Database\Connection
+     * @var \Illuminate\Support\Collection
      */
-    protected $connection;
+    protected $result;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
-     */
-    protected $model;
-
-    /**
-     * Executes an SQL statement with its bindings and types.
+     * Returns a number of affected rows.
      *
-     * @param  string $sql
-     * @param  array  $bindings
-     * @param  array  $types
-     * @return mixed
+     * @return integer
      */
-    public function execute($sql, array $parameters, array $types)
+    public function affected()
     {
-        $connection = $this->model->getConnection();
-
-        $type = (string) strtolower(substr($sql, 0, 6));
-
-        $result = $connection->$type($sql, $parameters);
-
-        if (is_array($result) === false)
-        {
-            return $result;
-        }
-
-        return $this->model->hydrate($result);
+        return $this->result->count();
     }
 
     /**
-     * Sets the Eloquent model to be used.
+     * Returns a result from a query instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return self
+     * @param  \Rougin\Windstorm\QueryInterface $query
+     * @return \Rougin\Windstorm\ResultInterface
      */
-    public function model(Model $model)
+    public function execute(QueryInterface $query)
     {
-        $this->model = $model;
+        $this->result = $query->instance()->get();
+
+        return $this;
+    }
+
+    /**
+     * Returns the first row from result.
+     *
+     * @return mixed
+     */
+    public function first()
+    {
+        return $this->result->first();
+    }
+
+    /**
+     * Returns the first row from result.
+     *
+     * @return mixed
+     */
+    public function items()
+    {
+        return $this->result;
     }
 }

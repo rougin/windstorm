@@ -1,21 +1,25 @@
 <?php
 
-namespace Rougin\Windstorm\Doctrine;
+namespace Rougin\Windstorm;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Rougin\Windstorm\Doctrine\Query;
+use Rougin\Windstorm\Doctrine\Result;
+use Rougin\Windstorm\Fixture\Mutators\ReturnUser;
 use Rougin\Windstorm\Fixture\Mutators\ReturnUsers;
 use Rougin\Windstorm\Fixture\Mutators\UpdateUser;
+use Rougin\Windstorm\Fixture\UserEntity;
 use Rougin\Windstorm\Fixture\UserRepository;
 
 /**
- * Result Test
+ * Query Repository Test
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-class ResultTest extends \PHPUnit_Framework_TestCase
+class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Rougin\Windstorm\Fixture\UserRepository
@@ -29,7 +33,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $paths = array($root = __DIR__ . '/..');
+        $paths = array($root = (string) __DIR__);
 
         $config = Setup::createAnnotationMetadataConfiguration($paths, true);
 
@@ -49,34 +53,44 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests ResultInterface::query.
+     * Tests QueryRepository::affected.
      *
      * @return void
      */
-    public function testExecuteMethod()
+    public function testAffectedMethod()
     {
-        $expected = require __DIR__ . '/../Fixture/UserItems.php';
+        $data = array('updated_at' => date('Y-m-d H:i:s'));
 
-        $result = $this->user->mutate(new ReturnUsers);
+        $result = $this->user->mutate(new UpdateUser(1, $data));
 
-        $this->assertEquals($expected, $result->items());
+        $this->assertEquals(1, $result->affected());
     }
 
     /**
-     * Tests ResultInterface::result with update.
-     *
-     * @depends testExecuteMethod
+     * Tests QueryRepository::first.
      *
      * @return void
      */
-    public function testExecuteMethodWithUpdate()
+    public function testFirstMethod()
     {
-        $data = array('name' => 'Windstorm');
+        $expected = new UserEntity(1, 'Windstorm');
 
-        $mutator = new UpdateUser(1, (array) $data);
+        $result = $this->user->mutate(new ReturnUser(1));
 
-        $result = $this->user->mutate($mutator);
+        $result = $result->first();
 
-        $this->assertEquals(1, $result->affected());
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Tests QueryRepository::items.
+     *
+     * @return void
+     */
+    public function testItemsMethod()
+    {
+        $result = $this->user->mutate(new ReturnUsers);
+
+        $this->assertCount(4, $result->items());
     }
 }

@@ -29,7 +29,7 @@ class UserEntity
      */
     public function __construct($id, $name)
     {
-        $this->id = $id;
+        $this->id = (integer) $id;
 
         $this->name = $name;
     }

@@ -61,15 +61,17 @@ class SelectQuery
     {
         $query = 'SELECT ' . (string) implode(', ', (array) $this->parts['select']);
 
-        $query .= $this->parts['from'] ? ' FROM ' . (string) implode(', ', $this->clauses()) : '';
+        if ($this->parts['from'])
+        {
+            $query .= ' FROM ' . (string) implode(', ', $this->clauses());
+        }
 
-        $query .= $this->parts['where'] !== null ? ' WHERE ' . $this->parts['where'] : '';
+        if ($this->parts['where'] !== null)
+        {
+            $query .= ' WHERE ' . $this->parts['where'];
+        }
 
-        $query .= $this->parts['groupBy'] ? ' GROUP BY ' . implode(', ', $this->parts['groupBy']) : '';
-
-        $query .= $this->parts['having'] !== null ? ' HAVING ' . $this->parts['having'] : '';
-
-        $query .= $this->parts['orderBy'] ? ' ORDER BY ' . implode(', ', $this->parts['orderBy']) : '';
+        $query .= $this->group();
 
         if ($this->max !== null || $this->first !== null)
         {
@@ -111,6 +113,33 @@ class SelectQuery
     }
 
     /**
+     * Returns the query for GROUP BY, HAVING, and ORDER BY.
+     *
+     * @return string
+     */
+    protected function group()
+    {
+        $query = '';
+
+        if ($this->parts['groupBy'])
+        {
+            $query .= ' GROUP BY ' . implode(', ', $this->parts['groupBy']);
+        }
+
+        if ($this->parts['having'] !== null)
+        {
+            $query .= ' HAVING ' . $this->parts['having'];
+        }
+
+        if ($this->parts['orderBy'])
+        {
+            $query .= ' ORDER BY ' . implode(', ', $this->parts['orderBy']);
+        }
+
+        return $query;
+    }
+
+    /**
      * Creates JOIN queries on specified tables.
      *
      * @param  string $alias
@@ -129,11 +158,6 @@ class SelectQuery
 
         foreach ($this->parts['join'][$alias] as $join)
         {
-            if (array_key_exists($join['joinAlias'], $aliases))
-            {
-                throw QueryException::nonUniqueAlias($join['joinAlias'], array_keys($aliases));
-            }
-
             $sql .= ' ' . strtoupper($join['joinType']) . ' JOIN ' . $join['joinTable'];
 
             $sql .= ' ' . $join['joinAlias'] . ' ON ' . ((string) $join['joinCondition']);
