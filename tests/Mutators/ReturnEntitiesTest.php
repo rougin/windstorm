@@ -3,7 +3,6 @@
 namespace Rougin\Windstorm\Mutators;
 
 use Rougin\Windstorm\Fixture\Mutators\ReturnUsers;
-use Rougin\Windstorm\Fixture\UserEntity;
 
 /**
  * Return Entities Test
@@ -21,8 +20,6 @@ class ReturnEntitiesTest extends TestCase
     public function testSetMethod()
     {
         $expected = require __DIR__ . '/../Fixture/UserItems.php';
-
-        $expected[] = new UserEntity(5, 'MutatorInterface');
 
         $result = $this->user->mutate(new ReturnUsers);
 

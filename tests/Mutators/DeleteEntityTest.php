@@ -21,6 +21,6 @@ class DeleteEntityTest extends TestCase
     {
         $result = $this->user->mutate(new DeleteUser(4));
 
-        $this->assertEquals(0, $result->affected());
+        $this->assertEquals(1, $result->affected());
     }
 }

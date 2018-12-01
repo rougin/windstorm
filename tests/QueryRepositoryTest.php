@@ -91,6 +91,6 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->user->mutate(new ReturnUsers);
 
-        $this->assertCount(4, $result->items());
+        $this->assertCount(3, $result->items());
     }
 }

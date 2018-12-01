@@ -15,6 +15,11 @@ use Rougin\Windstorm\ResultInterface;
 class Result implements ResultInterface
 {
     /**
+     * @var integer
+     */
+    protected $affected = 0;
+
+    /**
      * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
@@ -41,7 +46,7 @@ class Result implements ResultInterface
      */
     public function affected()
     {
-        return $this->result->rowCount();
+        return $this->affected;
     }
 
     /**
@@ -62,10 +67,12 @@ class Result implements ResultInterface
 
         if (strpos($sql, 'SELECT') === false)
         {
-            $this->result = $connection->executeUpdate($sql, $bindings, $types);
+            $this->affected = $connection->executeUpdate($sql, $bindings, $types);
         }
-
-        $this->result = $connection->executeQuery($sql, $bindings, $types);
+        else
+        {
+            $this->result = $connection->executeQuery($sql, $bindings, $types);
+        }
 
         return $this;
     }
