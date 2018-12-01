@@ -7,17 +7,21 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Windstorm is an expressive SQL query builder based on top of Doctrine's [Database Abstraction Layer (DBAL)](https://www.doctrine-project.org/projects/dbal.html). It has the same functionalities from DBAL's query builder but the difference is it does not requires a `Doctrine\DBAL\Connection` instance.
+Windstorm is an expressive SQL query builder based intially on top of Doctrine's [Database Abstraction Layer (DBAL)](https://www.doctrine-project.org/projects/dbal.html). It has the same functionalities from DBAL's query builder but the difference is it does not requires a `Doctrine\DBAL\Connection` instance. Its goal is to be a single interface for handling SQL query builders and [object-relational mappers](https://en.wikipedia.org/wiki/Object-relational_mapping). Windstorm currently supports the [Doctrine](https://www.doctrine-project.org/projects/orm.html) (through DBAL) but limited to [Eloquent](https://laravel.com/docs/5.7/eloquent) (only supports `SELECT` statement as of now).
 
-## Install
+## Why
+
+I tried to unify `Doctrine` and `Eloquent` into a single interface for them to be swappable. But the implementation is not possible because the core design patterns were different ([data mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) for Doctrine while [active record](https://en.wikipedia.org/wiki/Active_record_pattern) for Eloquent). I realized later that the one thing common for both is their query builder. While it was easy to integrate Doctrine (using DBAL as its base), it was quite challenging to integrate Eloquent because of the same pattern mentioned earlier.
+
+## Installation
 
 Install Windstorm via [Composer](https://getcomposer.org):
 
 ``` bash
-$ composer require rougin/windstorm
+$ composer require rougin/windstorm:dev-master
 ```
 
-## Usage
+## Basic Usage
 
 ### Configuration
 
@@ -80,13 +84,13 @@ To return the results from a defined query, an instance must be implemented in `
 
 use Rougin\Windstorm\Doctrine\Result;
 
-$execute = new Result($connection);
+$result = new Result($connection);
 
 $query = $query->select(array('u.*'));
 
 $query = $query->from('users');
 
-$result = $execute->execute($query);
+$result = $result->execute($query);
 
 var_dump((array) $result->items());
 ```
@@ -131,20 +135,38 @@ array(3) {
 
 ### QueryRepository and mutators
 
-The `QueryRepository` instance is a special class that will mutate the `QueryInterface` through the use the mutators. The logic is loosely based on a [specification design pattern](https://en.wikipedia.org/wiki/Specification_pattern).
+The `QueryRepository` instance is a special class that will mutate the `QueryInterface` through the use of mutators (implemented in `MutatorInterface`). Using this approach will seperate conditions into classes instead of defining it as methods inside a repository.
+
+``` php
+namespace Acme\Mutators;
+
+use Rougin\Windstorm\Mutators\ReturnEntity;
+
+class ReturnUser extends ReturnEntity
+{
+    protected $table = 'users';
+}
+```
+
+Available mutators that can be extended:
+
+* `CreateEntity(array $data)` - generates a `INSERT INTO` query
+* `DeleteEntity(integer $id)` - generates a `DELETE FROM` query
+* `ReturnEntities($limit, $offset)` - generates a `SELECT` query with a limit and offset
+* `ReturnEntity(integer $id)` - generates a `SELECT` query (use `first` in `ResultInterface`)
+* `UpdateEntity($id, array $data)` - generates a `UPDATE` query
 
 ``` php
 // $query instanceof Rougin\Windstorm\QueryInterface;
 // $result instanceof Rougin\Windstorm\ResultInterface;
 
-use Rougin\Windstorm\Mutators\ReturnEntity;
-use Rougin\Windstorm\Mutators\ReturnEntities;
+use Acme\Mutators\ReturnUser;
 
 $query = $query->select(['*'])->from('users');
 
 $query = new QueryRepository($query, $result);
 
-$query = $query->mutate(new ReturnEntity(1));
+$query = $query->mutate(new ReturnUser(1));
 
 var_dump($query->first());
 ```
@@ -177,6 +199,8 @@ class UserMapper implements MapperInterface
     }
 }
 ```
+
+Not specifying the `MapperInterface` will return the data as is from `ResultInterface`.
 
 ``` php
 // $query instanceof Rougin\Windstorm\QueryRepository;

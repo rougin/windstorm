@@ -3,7 +3,6 @@
 namespace Rougin\Windstorm\Fixture\Mutators;
 
 use Rougin\Windstorm\Mutators\CreateEntity;
-use Rougin\Windstorm\QueryInterface;
 
 /**
  * Create User Mutator

@@ -3,7 +3,6 @@
 namespace Rougin\Windstorm\Fixture\Mutators;
 
 use Rougin\Windstorm\Mutators\ReturnEntities;
-use Rougin\Windstorm\QueryInterface;
 
 /**
  * Return User Mutator

@@ -13,10 +13,10 @@ interface QueryInterface
     /**
      * Generates a SELECT query.
      *
-     * @param  array  $fields
+     * @param  array|string $fields
      * @return self
      */
-    public function select(array $fields);
+    public function select($fields);
 
     /**
      * Generates a FROM query.
@@ -110,10 +110,10 @@ interface QueryInterface
     /**
      * Generates a GROUP BY query.
      *
-     * @param  array $fields
+     * @param  array|string $fields
      * @return self
      */
-    public function groupBy(array $fields);
+    public function groupBy($fields);
 
     /**
      * Generates a HAVING query.

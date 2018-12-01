@@ -3,7 +3,6 @@
 namespace Rougin\Windstorm\Fixture\Mutators;
 
 use Rougin\Windstorm\Mutators\DeleteEntity;
-use Rougin\Windstorm\QueryInterface;
 
 /**
  * Delete User Mutator

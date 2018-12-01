@@ -137,7 +137,7 @@ class QueryTest extends TestCase
 
         $query = $this->query->select(array('*'))->from('users');
 
-        $result = $query->groupBy(array('active'))->sql();
+        $result = $query->groupBy('active')->sql();
 
         $this->assertEquals($expected, $result);
     }
@@ -183,6 +183,11 @@ class QueryTest extends TestCase
      */
     public function testOrHavingMethod()
     {
+        if (! class_exists('Illuminate\Database\Concerns'))
+        {
+            $this->markTestSkipped('Eloquent does not support orHaving in this version.');
+        }
+
         $expected = 'select * from "users" having "name" = ? or "active" = ?';
 
         $query = $this->query->select(array('*'))->from('users');

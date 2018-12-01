@@ -131,6 +131,11 @@ class QueryRepository
      */
     protected function map(array $data)
     {
+        if ($this->mapper === null)
+        {
+            return (array) $data;
+        }
+
         return $this->mapper->map($data);
     }
 }
