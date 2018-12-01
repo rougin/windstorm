@@ -183,7 +183,7 @@ class QueryTest extends TestCase
      */
     public function testOrHavingMethod()
     {
-        if (! class_exists('Illuminate\Database\Concerns'))
+        if (! class_exists('Illuminate\Database\Eloquent\QueueEntityResolver'))
         {
             $this->markTestSkipped('Eloquent does not support orHaving in this version.');
         }
