@@ -186,6 +186,13 @@ class Where implements WhereInterface
         return $this->where('not like', $value);
     }
 
+    /**
+     * Sets the query builder instance.
+     *
+     * @param  string $operator
+     * @param  mixed  $value
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     protected function where($operator, $value)
     {
         $method = (string) $this->method;

@@ -76,6 +76,11 @@ class Order implements OrderInterface
         return $this->set()->__toString();
     }
 
+    /**
+     * Sets the query builder instance.
+     *
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     protected function set()
     {
         $this->builder = $this->builder->orderBy($this->key, $this->order);

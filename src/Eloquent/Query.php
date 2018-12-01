@@ -2,8 +2,8 @@
 
 namespace Rougin\Windstorm\Eloquent;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Rougin\Windstorm\QueryInterface;
 
 /**
@@ -17,7 +17,7 @@ class Query implements QueryInterface
     /**
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    protected $model;
+    protected $builder;
 
     /**
      * Initializes the query instance.
@@ -26,7 +26,7 @@ class Query implements QueryInterface
      */
     public function __construct(Model $model)
     {
-        $this->model = $model;
+        $this->builder = $model->newQuery();
     }
 
     /**
@@ -47,7 +47,7 @@ class Query implements QueryInterface
      */
     public function andHaving($key)
     {
-        return new Having($this, $this->model, $key, 'and');
+        return new Having($this, $this->builder, $key, 'and');
     }
 
     /**
@@ -58,7 +58,7 @@ class Query implements QueryInterface
      */
     public function andOrderBy($key)
     {
-        return new Order($this, $this->model, $key);
+        return new Order($this, $this->builder, $key);
     }
 
     /**
@@ -69,7 +69,7 @@ class Query implements QueryInterface
      */
     public function andWhere($key)
     {
-        return new Where($this, $this->model, $key, 'and');
+        return new Where($this, $this->builder, $key, 'and');
     }
 
     /**
@@ -79,18 +79,18 @@ class Query implements QueryInterface
      */
     public function bindings()
     {
-        return $this->model->getBindings();
+        return $this->builder->getBindings();
     }
 
     /**
      * Sets the builder instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
+     * @param  \Illuminate\Database\Query\Builder $builder
      * @return self
      */
     public function builder(Builder $builder)
     {
-        $this->model = $builder;
+        $this->builder = $builder;
 
         return $this;
     }
@@ -115,7 +115,7 @@ class Query implements QueryInterface
      */
     public function from($table, $alias = null)
     {
-        $this->model = $this->model->from($table);
+        $this->builder = $this->builder->from($table);
 
         return $this;
     }
@@ -128,7 +128,7 @@ class Query implements QueryInterface
      */
     public function groupBy($fields)
     {
-        $this->model = $this->model->groupBy($fields);
+        $this->builder = $this->builder->groupBy($fields);
 
         return $this;
     }
@@ -141,7 +141,7 @@ class Query implements QueryInterface
      */
     public function having($key)
     {
-        return new Having($this, $this->model, $key);
+        return new Having($this, $this->builder, $key);
     }
 
     /**
@@ -154,7 +154,7 @@ class Query implements QueryInterface
      */
     public function innerJoin($table, $local, $foreign)
     {
-        $this->model = $this->model->join($table, $local, '=', $foreign);
+        $this->builder = $this->builder->join($table, $local, '=', $foreign);
 
         return $this;
     }
@@ -176,7 +176,7 @@ class Query implements QueryInterface
      */
     public function instance()
     {
-        return $this->model;
+        return $this->builder;
     }
 
     /**
@@ -189,7 +189,7 @@ class Query implements QueryInterface
      */
     public function leftJoin($table, $local, $foreign)
     {
-        $this->model = $this->model->join($table, $local, '=', $foreign, 'left');
+        $this->builder = $this->builder->join($table, $local, '=', $foreign, 'left');
 
         return $this;
     }
@@ -203,11 +203,11 @@ class Query implements QueryInterface
      */
     public function limit($limit, $offset = null)
     {
-        $this->model = $this->model->limit($limit);
+        $this->builder = $this->builder->limit($limit);
 
         if ($offset)
         {
-            $this->model = $this->model->offset($offset);
+            $this->builder = $this->builder->offset($offset);
         }
 
         return $this;
@@ -221,7 +221,7 @@ class Query implements QueryInterface
      */
     public function orHaving($key)
     {
-        return new Having($this, $this->model, $key, 'or');
+        return new Having($this, $this->builder, $key, 'or');
     }
 
     /**
@@ -232,7 +232,7 @@ class Query implements QueryInterface
      */
     public function orWhere($key)
     {
-        return new Where($this, $this->model, $key, 'or');
+        return new Where($this, $this->builder, $key, 'or');
     }
 
     /**
@@ -243,7 +243,7 @@ class Query implements QueryInterface
      */
     public function orderBy($key)
     {
-        return new Order($this, $this->model, $key);
+        return new Order($this, $this->builder, $key);
     }
 
     /**
@@ -256,7 +256,7 @@ class Query implements QueryInterface
      */
     public function rightJoin($table, $local, $foreign)
     {
-        $this->model = $this->model->join($table, $local, '=', $foreign, 'right');
+        $this->builder = $this->builder->join($table, $local, '=', $foreign, 'right');
 
         return $this;
     }
@@ -269,7 +269,7 @@ class Query implements QueryInterface
      */
     public function select($fields)
     {
-        $this->model = $this->model->select($fields);
+        $this->builder = $this->builder->select($fields);
 
         return $this;
     }
@@ -281,7 +281,7 @@ class Query implements QueryInterface
      */
     public function sql()
     {
-        return $this->model->toSql();
+        return $this->builder->toSql();
     }
 
     /**
@@ -313,6 +313,6 @@ class Query implements QueryInterface
      */
     public function where($key)
     {
-        return new Where($this, $this->model, $key, 'and');
+        return new Where($this, $this->builder, $key, 'and');
     }
 }
