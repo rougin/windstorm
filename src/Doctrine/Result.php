@@ -25,7 +25,7 @@ class Result implements ResultInterface
     protected $connection;
 
     /**
-     * @var \PDOStatement
+     * @var \Doctrine\DBAL\Driver\Statement
      */
     protected $result;
 
