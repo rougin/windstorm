@@ -1,9 +1,10 @@
 {
     "name": "rougin/windstorm",
     "description": "An expressive SQL query builder.",
-    "homepage": "https://github.com/rougin/windstorm",
+    "homepage": "https://rougin.github.io/windstorm/",
     "license": "MIT",
-    "authors": [
+    "authors":
+    [
         {
             "name": "Rougin Gutib",
             "email": "rougingutib@gmail.com",
@@ -11,23 +12,29 @@
             "role": "Developer"
         }
     ],
-    "require": {
+    "require":
+    {
         "php": ">=5.3.0",
         "doctrine/dbal": "~2.5"
     },
-    "require-dev": {
+    "require-dev":
+    {
         "doctrine/orm": "~2.4",
         "illuminate/database": ">=4.1",
         "phpunit/phpunit": "~4.2|~5.7",
         "scrutinizer/ocular": "~1.1"
     },
-    "autoload": {
-        "psr-4": {
+    "autoload":
+    {
+        "psr-4":
+        {
             "Rougin\\Windstorm\\": "src"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
+    "autoload-dev":
+    {
+        "psr-4":
+        {
             "Rougin\\Windstorm\\": "tests"
         }
     }
