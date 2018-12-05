@@ -11,11 +11,11 @@ Windstorm is an expressive SQL query builder based intially on top of Doctrine's
 
 ## Why
 
-I tried to unify `Doctrine` and `Eloquent` into a single interface for them to be swappable. But the implementation is not possible because the core design patterns were different ([data mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) for Doctrine while [active record](https://en.wikipedia.org/wiki/Active_record_pattern) for Eloquent). I realized later that the one thing common for both is their query builder. While it was easy to integrate Doctrine (using DBAL as its base), it was quite challenging to integrate Eloquent because of the same pattern mentioned earlier.
+I tried to unify `Doctrine` and `Eloquent` into a single interface for them to be swappable. Unfortunately the implementation is not possible because of the different core design patterns ([data mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) for Doctrine while [active record](https://en.wikipedia.org/wiki/Active_record_pattern) for Eloquent). I realized later that the one thing common for both is their query builder and it was also common on all existing ORM packages and SQL query builders. While it was easy to integrate Doctrine (thanks for its [DBAL](https://www.doctrine-project.org/projects/dbal.html) as the base), it was quite challenging to integrate Eloquent because of the same pattern mentioned earlier.
 
 ## Installation
 
-Install Windstorm via [Composer](https://getcomposer.org):
+Install `Windstorm` via [Composer](https://getcomposer.org):
 
 ``` bash
 $ composer require rougin/windstorm:dev-master
@@ -223,7 +223,6 @@ class Acme\Models\User#11 (2) {
 
 ## Credits
 
-- [Rougin Gutib][link-author]
 - [All contributors][link-contributors]
 
 ## License
