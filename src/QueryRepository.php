@@ -126,10 +126,10 @@ class QueryRepository
     /**
      * Maps the result data into a mapper instance.
      *
-     * @param  array  $data
+     * @param  mixed $data
      * @return mixed
      */
-    protected function map(array $data)
+    protected function map($data)
     {
         if ($this->mapper === null)
         {

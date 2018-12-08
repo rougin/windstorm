@@ -27,6 +27,11 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     protected $user;
 
     /**
+     * @var \Rougin\Windstorm\QueryRepository
+     */
+    protected $query;
+
+    /**
      * Sets up the query builder instance.
      *
      * @return void
@@ -48,6 +53,8 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
         $result = new Result($manager->getConnection());
 
         $query = new Query($builder);
+
+        $this->query = new QueryRepository($query, $result);
 
         $this->user = new UserRepository($query, $result);
     }
@@ -90,6 +97,18 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     public function testItemsMethod()
     {
         $result = $this->user->mutate(new ReturnUsers);
+
+        $this->assertCount(3, $result->items());
+    }
+
+    /**
+     * Tests QueryRepository::items without a mapper instance.
+     *
+     * @return void
+     */
+    public function testItemsMethodWithoutMapper()
+    {
+        $result = $this->query->mutate(new ReturnUsers);
 
         $this->assertCount(3, $result->items());
     }

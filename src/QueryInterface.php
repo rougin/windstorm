@@ -10,6 +10,14 @@ namespace Rougin\Windstorm;
  */
 interface QueryInterface
 {
+    const TYPE_SELECT = 0;
+
+    const TYPE_INSERT = 1;
+
+    const TYPE_UPDATE = 2;
+
+    const TYPE_DELETE = 3;
+
     /**
      * Generates a SELECT query.
      *
@@ -179,11 +187,11 @@ interface QueryInterface
     public function bindings();
 
     /**
-     * Returns the data types of the bindings.
+     * Returns the type of the query.
      *
-     * @return array
+     * @return integer
      */
-    public function types();
+    public function type();
 
     /**
      * Returns the instance of the query builder, if any.
