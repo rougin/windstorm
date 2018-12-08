@@ -7,11 +7,11 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Windstorm is an expressive SQL query builder based intially on top of Doctrine's [Database Abstraction Layer (DBAL)](https://www.doctrine-project.org/projects/dbal.html). It has the same functionalities from DBAL's query builder but the difference is it does not requires a `Doctrine\DBAL\Connection` instance. Its goal is to be a single interface for handling SQL query builders and [object-relational mappers](https://en.wikipedia.org/wiki/Object-relational_mapping). Windstorm currently supports the [Doctrine](https://www.doctrine-project.org/projects/orm.html) (through DBAL) but limited to [Eloquent](https://laravel.com/docs/5.7/eloquent) (only supports `SELECT` statement as of now).
+Windstorm is an expressive SQL query builder based intially on top of Doctrine's [Database Abstraction Layer (DBAL)](https://www.doctrine-project.org/projects/dbal.html). It has the same functionalities from DBAL's query builder but the difference is it does not requires a `Doctrine\DBAL\Connection` instance. Its goal is to be a single interface for handling SQL query builders and [object-relational mappers](https://en.wikipedia.org/wiki/Object-relational_mapping). Windstorm currently has query implementations for [Doctrine](https://www.doctrine-project.org/projects/orm.html) (through DBAL) and [Eloquent](https://laravel.com/docs/5.7/eloquent).
 
 ## Why
 
-I tried to unify `Doctrine` and `Eloquent` into a single interface for them to be swappable. Unfortunately the implementation is not possible because of the different core design patterns ([data mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) for Doctrine while [active record](https://en.wikipedia.org/wiki/Active_record_pattern) for Eloquent). I realized later that the one thing common for both is their query builder and it was also common on all existing ORM packages and SQL query builders. While it was easy to integrate Doctrine (thanks for its [DBAL](https://www.doctrine-project.org/projects/dbal.html) as the base), it was quite challenging to integrate Eloquent because of the same pattern mentioned earlier.
+I tried to unify `Doctrine` and `Eloquent` into a single interface for them to be swappable. Unfortunately the implementation is not possible because of the different core design patterns ([data mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) for Doctrine while [active record](https://en.wikipedia.org/wiki/Active_record_pattern) for Eloquent). I realized later that the one thing common for both is their query builder and it was also common on all existing ORM packages and SQL query builders.
 
 ## Installation
 
@@ -193,14 +193,12 @@ use Acme\Models\User;
 
 class UserMapper implements MapperInterface
 {
-    public function map(array $data)
+    public function map($data)
     {
         return new User($data['id'], $data['name']);
     }
 }
 ```
-
-Not specifying the `MapperInterface` will return the data as is from `ResultInterface`.
 
 ``` php
 // $query instanceof Rougin\Windstorm\QueryRepository;
@@ -221,6 +219,8 @@ class Acme\Models\User#11 (2) {
 }
 ```
 
+Not specifying the `MapperInterface` will return the data as is from `ResultInterface`.
+
 ## Credits
 
 - [All contributors][link-contributors]
@@ -229,14 +229,13 @@ class Acme\Models\User#11 (2) {
 
 The MIT License (MIT). Please see [LICENSE][link-license] for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/rougin/windstorm.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/rougin/windstorm/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/rougin/windstorm.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/rougin/windstorm.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/rougin/windstorm.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/rougin/windstorm.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/rougin/windstorm/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/rougin/windstorm.svg?style=flat-square
 
-[link-author]: https://rougin.github.io
 [link-changelog]: https://github.com/rougin/windstorm/blob/master/CHANGELOG.md
 [link-code-quality]: https://scrutinizer-ci.com/g/rougin/windstorm
 [link-contributors]: https://github.com/rougin/windstorm/contributors
