@@ -63,14 +63,14 @@ class OrderTest extends TestCase
      *
      * @return void
      */
-    // public function testToStringMagicMethod()
-    // {
-    //     $expected = 'SELECT * FROM users u ORDER BY name ASC';
+    public function testToStringMagicMethod()
+    {
+        $expected = 'select * from "users" order by "name" asc';
 
-    //     $query = $this->query->select(array('*'));
+        $query = $this->query->select(array('*'));
 
-    //     $result = (string) $query->from('users')->orderBy('name');
+        $result = (string) $query->from('users')->orderBy('name');
 
-    //     $this->assertEquals($expected, $result);
-    // }
+        $this->assertEquals($expected, $result);
+    }
 }

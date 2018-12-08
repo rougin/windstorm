@@ -15,10 +15,10 @@ class UserMapper implements MapperInterface
     /**
      * Maps the result data into a class.
      *
-     * @param  array $data
+     * @param  mixed $data
      * @return mixed
      */
-    public function map(array $data)
+    public function map($data)
     {
         return new UserEntity($data['id'], $data['name']);
     }

@@ -15,9 +15,24 @@ use Rougin\Windstorm\QueryInterface;
 class Query implements QueryInterface
 {
     /**
+     * @var array
+     */
+    protected $bindings = array();
+
+    /**
      * @var \Illuminate\Database\Eloquent\Builder
      */
     protected $builder;
+
+    /**
+     * @var string
+     */
+    protected $sql = '';
+
+    /**
+     * @var integer
+     */
+    protected $type = self::TYPE_SELECT;
 
     /**
      * Initializes the query instance.
@@ -79,7 +94,12 @@ class Query implements QueryInterface
      */
     public function bindings()
     {
-        return $this->builder->getBindings();
+        if (empty($this->bindings))
+        {
+            return $this->builder->getBindings();
+        }
+
+        return $this->bindings;
     }
 
     /**
@@ -96,6 +116,19 @@ class Query implements QueryInterface
     }
 
     /**
+     * Sets the data with new values.
+     *
+     * @param  array $data
+     * @return self
+     */
+    public function data(array $data)
+    {
+        $this->bindings = $data;
+
+        return $this;
+    }
+
+    /**
      * Generates a DELETE FROM query.
      *
      * @param  string      $table
@@ -104,6 +137,9 @@ class Query implements QueryInterface
      */
     public function deleteFrom($table, $alias = null)
     {
+        $this->type = self::TYPE_DELETE;
+
+        return $this;
     }
 
     /**
@@ -167,6 +203,9 @@ class Query implements QueryInterface
      */
     public function insertInto($table)
     {
+        $this->type = (integer) self::TYPE_INSERT;
+
+        return new Insert($this, $this->builder);
     }
 
     /**
@@ -271,6 +310,8 @@ class Query implements QueryInterface
     {
         $this->builder = $this->builder->select($fields);
 
+        $this->type = self::TYPE_SELECT;
+
         return $this;
     }
 
@@ -281,17 +322,35 @@ class Query implements QueryInterface
      */
     public function sql()
     {
-        return $this->builder->toSql();
+        $query = $this->builder->getQuery();
+
+        switch ($this->type)
+        {
+            case QueryInterface::TYPE_INSERT:
+                $grammar = $query->getGrammar();
+
+                return $grammar->compileInsert($query, $this->bindings);
+            case QueryInterface::TYPE_UPDATE:
+                $grammar = $query->getGrammar();
+
+                return $grammar->compileUpdate($query, $this->bindings);
+            case QueryInterface::TYPE_DELETE:
+                $grammar = $query->getGrammar();
+
+                return $grammar->compileDelete($query);
+        }
+
+        return (string) $this->builder->toSql();
     }
 
     /**
-     * Returns the data types of the bindings.
+     * Returns the type of the query.
      *
-     * @return array
+     * @return integer
      */
-    public function types()
+    public function type()
     {
-        return array();
+        return $this->type;
     }
 
     /**
@@ -303,6 +362,9 @@ class Query implements QueryInterface
      */
     public function update($table, $alias = null)
     {
+        $this->type = self::TYPE_UPDATE;
+
+        return new Update($this, $this->builder);
     }
 
     /**

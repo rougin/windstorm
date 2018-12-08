@@ -79,16 +79,16 @@ class QueryTest extends TestCase
      *
      * @return void
      */
-    // public function testDeleteFromMethod()
-    // {
-    //     $expected = 'DELETE FROM users WHERE id = :u_id';
+    public function testDeleteFromMethod()
+    {
+        $expected = 'delete from "users" where "id" = ?';
 
-    //     $query = $this->query->deleteFrom('users');
+        $query = $this->query->deleteFrom('users');
 
-    //     $result = $query->where('id')->equals(1)->sql();
+        $result = $query->where('id')->equals(1)->sql();
 
-    //     $this->assertEquals($expected, $result);
-    // }
+        $this->assertEquals($expected, $result);
+    }
 
     /**
      * Tests QueryInterface::andWhere.
@@ -238,42 +238,28 @@ class QueryTest extends TestCase
      *
      * @return void
      */
-    // public function testSqlMethod()
-    // {
-    //     $expected = 'DELETE FROM users WHERE id = :u_id';
+    public function testSqlMethod()
+    {
+        $expected = 'delete from "users" where "id" = ?';
 
-    //     $query = $this->query->deleteFrom('users');
+        $query = $this->query->deleteFrom('users');
 
-    //     $result = $query->where('id')->equals(1)->sql();
+        $result = $query->where('id')->equals(1)->sql();
 
-    //     $this->assertEquals($expected, $result);
-    // }
+        $this->assertEquals($expected, $result);
+    }
 
     /**
      * Tests QueryInterface::bindings.
      *
      * @return void
      */
-    // public function testBindingsMethod()
-    // {
-    //     $expected = array(':u_id' => (integer) 1);
-
-    //     $query = $this->query->deleteFrom('users');
-
-    //     $result = $query->where('id')->equals(1)->bindings();
-
-    //     $this->assertEquals($expected, $result);
-    // }
-
-    /**
-     * Tests QueryInterface::types.
-     *
-     * @return void
-     */
-    public function testTypesMethod()
+    public function testBindingsMethod()
     {
-        $result = (array) $this->query->types();
+        $query = $this->query->deleteFrom('users');
 
-        $this->assertEquals(array(), $result);
+        $result = $query->where('id')->equals(1)->bindings();
+
+        $this->assertEquals(array(1), $result);
     }
 }

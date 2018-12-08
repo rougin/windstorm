@@ -15,6 +15,11 @@ use Rougin\Windstorm\ResultInterface;
 class Result implements ResultInterface
 {
     /**
+     * @var integer
+     */
+    protected $affected = 0;
+
+    /**
      * @var \Illuminate\Support\Collection
      */
     protected $result;
@@ -26,7 +31,7 @@ class Result implements ResultInterface
      */
     public function affected()
     {
-        return $this->result->count();
+        return $this->affected;
     }
 
     /**
@@ -37,7 +42,32 @@ class Result implements ResultInterface
      */
     public function execute(QueryInterface $query)
     {
-        $this->result = $query->instance()->get();
+        $builder = $query->instance();
+
+        if ($query->type() === QueryInterface::TYPE_SELECT)
+        {
+            $this->result = $builder->get();
+
+            return $this;
+        }
+
+        $bindings = $query->bindings();
+
+        switch ($query->type())
+        {
+            case QueryInterface::TYPE_INSERT:
+                $this->affected = $builder->insert($bindings);
+
+                break;
+            case QueryInterface::TYPE_UPDATE:
+                $this->affected = $builder->update($bindings);
+
+                break;
+            case QueryInterface::TYPE_DELETE:
+                $this->affected = $builder->delete($bindings);
+
+                break;
+        }
 
         return $this;
     }
