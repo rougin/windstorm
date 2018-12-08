@@ -61,17 +61,15 @@ class Result implements ResultInterface
 
         $sql = $query->sql();
 
-        $types = (array) $query->types();
-
         $connection = $this->connection;
 
-        if (strpos($sql, 'SELECT') === false)
+        if ($query->type() === QueryInterface::TYPE_SELECT)
         {
-            $this->affected = $connection->executeUpdate($sql, $bindings, $types);
+            $this->result = $connection->executeQuery($sql, $bindings);
         }
         else
         {
-            $this->result = $connection->executeQuery($sql, $bindings, $types);
+            $this->affected = $connection->executeUpdate($sql, $bindings);
         }
 
         return $this;

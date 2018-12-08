@@ -30,14 +30,9 @@ class Query implements QueryInterface
     protected $table = '';
 
     /**
-     * Returns the safe and compiled SQL.
-     *
-     * @return string
+     * @var integer
      */
-    public function __toString()
-    {
-        return $this->sql();
-    }
+    protected $type = self::TYPE_SELECT;
 
     /**
      * Initializes the query instance.
@@ -50,116 +45,69 @@ class Query implements QueryInterface
     }
 
     /**
-     * Generates a SELECT query.
+     * Returns the safe and compiled SQL.
      *
-     * @param  array|string $fields
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->sql();
+    }
+
+    /**
+     * Generates an AND HAVING query.
+     *
+     * @param  string $key
+     * @return \Rougin\Windstorm\HavingInterface
+     */
+    public function andHaving($key)
+    {
+        return new Having($this, $this->builder, $key, $this->initial, 'AND');
+    }
+
+    /**
+     * Generates a multiple ORDER BY query.
+     *
+     * @param  string $key
+     * @return \Rougin\Windstorm\OrderInterface
+     */
+    public function andOrderBy($key)
+    {
+        return new Order($this, $this->builder, $key, $this->initial, 'ADD');
+    }
+
+    /**
+     * Generates an AND WHERE query.
+     *
+     * @param  string $key
+     * @return \Rougin\Windstorm\WhereInterface
+     */
+    public function andWhere($key)
+    {
+        return new Where($this, $this->builder, $key, $this->initial, 'AND');
+    }
+
+    /**
+     * Returns the SQL bindings specified.
+     *
+     * @return array
+     */
+    public function bindings()
+    {
+        return $this->builder->getParameters();
+    }
+
+    /**
+     * Sets the Builder instance.
+     *
+     * @param  \Doctrine\DBAL\Query\QueryBuilder $builder
      * @return self
      */
-    public function select($fields)
+    public function builder(QueryBuilder $builder)
     {
-        $this->reset();
-
-        $this->builder->select($fields);
+        $this->builder = $builder;
 
         return $this;
-    }
-
-    /**
-     * Generates a FROM query.
-     *
-     * @param  string      $table
-     * @param  string|null $alias
-     * @return self
-     */
-    public function from($table, $alias = null)
-    {
-        $this->initial = $alias;
-
-        $this->table = $table;
-
-        $this->builder->from($table, $alias);
-
-        return $this;
-    }
-
-    /**
-     * Generates an INNER JOIN query.
-     *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
-     * @return self
-     */
-    public function innerJoin($table, $local, $foreign)
-    {
-        list($alias, $where) = $this->condition($table, $local, $foreign);
-
-        $this->builder->innerJoin($this->initial, $table, $alias, $where);
-
-        return $this;
-    }
-
-    /**
-     * Generates a LEFT JOIN query.
-     *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
-     * @return self
-     */
-    public function leftJoin($table, $local, $foreign)
-    {
-        list($alias, $where) = $this->condition($table, $local, $foreign);
-
-        $this->builder->leftJoin($this->initial, $table, $alias, $where);
-
-        return $this;
-    }
-
-    /**
-     * Generates a RIGHT JOIN query.
-     *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
-     * @return self
-     */
-    public function rightJoin($table, $local, $foreign)
-    {
-        list($alias, $where) = $this->condition($table, $local, $foreign);
-
-        $this->builder->rightJoin($this->initial, $table, $alias, $where);
-
-        return $this;
-    }
-
-    /**
-     * Generates an INSERT INTO query.
-     *
-     * @param  string $table
-     * @return \Rougin\Windstorm\InsertInterface
-     */
-    public function insertInto($table)
-    {
-        $this->reset();
-
-        return new Insert($this, $this->builder, $table);
-    }
-
-    /**
-     * Generates an UPDATE query.
-     *
-     * @param  string      $table
-     * @param  string|null $alias
-     * @return \Rougin\Windstorm\UpdateInterface
-     */
-    public function update($table, $alias = null)
-    {
-        $this->reset();
-
-        list($this->initial, $this->table) = array($alias, $table);
-
-        return new Update($this, $this->builder, $table, $alias);
     }
 
     /**
@@ -177,42 +125,31 @@ class Query implements QueryInterface
 
         $this->table = $table;
 
+        $this->type = self::TYPE_DELETE;
+
         $this->builder->delete($table, $this->initial);
 
         return $this;
     }
 
     /**
-     * Generates a WHERE query.
+     * Generates a FROM query.
      *
-     * @param  string $key
-     * @return \Rougin\Windstorm\WhereInterface
+     * @param  string      $table
+     * @param  string|null $alias
+     * @return self
      */
-    public function where($key)
+    public function from($table, $alias = null)
     {
-        return new Where($this, $this->builder, $key, $this->initial);
-    }
+        $this->initial = $alias;
 
-    /**
-     * Generates an AND WHERE query.
-     *
-     * @param  string $key
-     * @return \Rougin\Windstorm\WhereInterface
-     */
-    public function andWhere($key)
-    {
-        return new Where($this, $this->builder, $key, $this->initial, 'AND');
-    }
+        $this->table = $table;
 
-    /**
-     * Generates an OR WHERE query.
-     *
-     * @param  string $key
-     * @return \Rougin\Windstorm\WhereInterface
-     */
-    public function orWhere($key)
-    {
-        return new Where($this, $this->builder, $key, $this->initial, 'OR');
+        $this->type = self::TYPE_SELECT;
+
+        $this->builder->from($table, $alias);
+
+        return $this;
     }
 
     /**
@@ -240,47 +177,62 @@ class Query implements QueryInterface
     }
 
     /**
-     * Generates an AND HAVING query.
+     * Generates an INNER JOIN query.
      *
-     * @param  string $key
-     * @return \Rougin\Windstorm\HavingInterface
+     * @param  string $table
+     * @param  string $local
+     * @param  string $foreign
+     * @return self
      */
-    public function andHaving($key)
+    public function innerJoin($table, $local, $foreign)
     {
-        return new Having($this, $this->builder, $key, $this->initial, 'AND');
+        list($alias, $where) = $this->condition($table, $local, $foreign);
+
+        $this->builder->innerJoin($this->initial, $table, $alias, $where);
+
+        return $this;
     }
 
     /**
-     * Generates an OR HAVING query.
+     * Generates an INSERT INTO query.
      *
-     * @param  string $key
-     * @return \Rougin\Windstorm\HavingInterface
+     * @param  string $table
+     * @return \Rougin\Windstorm\InsertInterface
      */
-    public function orHaving($key)
+    public function insertInto($table)
     {
-        return new Having($this, $this->builder, $key, $this->initial, 'OR');
+        $this->reset();
+
+        $this->type = self::TYPE_INSERT;
+
+        return new Insert($this, $this->builder, $table);
     }
 
     /**
-     * Generates an ORDER BY query.
+     * Returns the instance of the query builder, if available.
      *
-     * @param  string $key
-     * @return \Rougin\Windstorm\OrderInterface
+     * @return mixed
      */
-    public function orderBy($key)
+    public function instance()
     {
-        return new Order($this, $this->builder, $key, $this->initial);
+        return $this->builder;
     }
 
     /**
-     * Generates a multiple ORDER BY query.
+     * Generates a LEFT JOIN query.
      *
-     * @param  string $key
-     * @return \Rougin\Windstorm\OrderInterface
+     * @param  string $table
+     * @param  string $local
+     * @param  string $foreign
+     * @return self
      */
-    public function andOrderBy($key)
+    public function leftJoin($table, $local, $foreign)
     {
-        return new Order($this, $this->builder, $key, $this->initial, 'ADD');
+        list($alias, $where) = $this->condition($table, $local, $foreign);
+
+        $this->builder->leftJoin($this->initial, $table, $alias, $where);
+
+        return $this;
     }
 
     /**
@@ -303,14 +255,68 @@ class Query implements QueryInterface
     }
 
     /**
-     * Sets the Builder instance.
+     * Generates an OR HAVING query.
      *
-     * @param  \Doctrine\DBAL\Query\QueryBuilder $builder
+     * @param  string $key
+     * @return \Rougin\Windstorm\HavingInterface
+     */
+    public function orHaving($key)
+    {
+        return new Having($this, $this->builder, $key, $this->initial, 'OR');
+    }
+
+    /**
+     * Generates an OR WHERE query.
+     *
+     * @param  string $key
+     * @return \Rougin\Windstorm\WhereInterface
+     */
+    public function orWhere($key)
+    {
+        return new Where($this, $this->builder, $key, $this->initial, 'OR');
+    }
+
+    /**
+     * Generates an ORDER BY query.
+     *
+     * @param  string $key
+     * @return \Rougin\Windstorm\OrderInterface
+     */
+    public function orderBy($key)
+    {
+        return new Order($this, $this->builder, $key, $this->initial);
+    }
+
+    /**
+     * Generates a RIGHT JOIN query.
+     *
+     * @param  string $table
+     * @param  string $local
+     * @param  string $foreign
      * @return self
      */
-    public function builder(QueryBuilder $builder)
+    public function rightJoin($table, $local, $foreign)
     {
-        $this->builder = $builder;
+        list($alias, $where) = $this->condition($table, $local, $foreign);
+
+        $this->builder->rightJoin($this->initial, $table, $alias, $where);
+
+        return $this;
+    }
+
+    /**
+     * Generates a SELECT query.
+     *
+     * @param  array|string $fields
+     * @return self
+     */
+    public function select($fields)
+    {
+        $this->reset();
+
+        $this->type = self::TYPE_SELECT;
+
+        $this->builder->select($fields);
 
         return $this;
     }
@@ -326,33 +332,42 @@ class Query implements QueryInterface
     }
 
     /**
-     * Returns the SQL bindings specified.
+     * Returns the type of the query.
      *
-     * @return array
+     * @return integer
      */
-    public function bindings()
+    public function type()
     {
-        return $this->builder->getParameters();
+        return $this->type;
     }
 
     /**
-     * Returns the data types of the bindings.
+     * Generates an UPDATE query.
      *
-     * @return array
+     * @param  string      $table
+     * @param  string|null $alias
+     * @return \Rougin\Windstorm\UpdateInterface
      */
-    public function types()
+    public function update($table, $alias = null)
     {
-        return $this->builder->getParameterTypes();
+        $this->reset();
+
+        $this->type = self::TYPE_UPDATE;
+
+        list($this->initial, $this->table) = array($alias, $table);
+
+        return new Update($this, $this->builder, $table, $alias);
     }
 
     /**
-     * Returns the instance of the query builder, if available.
+     * Generates a WHERE query.
      *
-     * @return mixed
+     * @param  string $key
+     * @return \Rougin\Windstorm\WhereInterface
      */
-    public function instance()
+    public function where($key)
     {
-        return $this->builder;
+        return new Where($this, $this->builder, $key, $this->initial);
     }
 
     /**
@@ -417,6 +432,8 @@ class Query implements QueryInterface
         $this->table = (string) '';
 
         $this->builder->setParameters(array());
+
+        $this->type = self::TYPE_SELECT;
 
         return $this;
     }

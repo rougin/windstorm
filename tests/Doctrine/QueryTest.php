@@ -277,22 +277,6 @@ class QueryTest extends TestCase
     }
 
     /**
-     * Tests QueryInterface::types.
-     *
-     * @return void
-     */
-    public function testTypesMethod()
-    {
-        $expected = array(':id' => (string) 'integer');
-
-        $query = $this->query->deleteFrom('users');
-
-        $result = $query->where('id')->equals(1)->types();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
      * Tests QueryInterface::instance.
      *
      * @return void
