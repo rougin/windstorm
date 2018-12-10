@@ -1,6 +1,6 @@
 {
     "name": "rougin/windstorm",
-    "description": "An expressive SQL query builder.",
+    "description": "A chainable, expressive, and interoperable SQL query builder.",
     "homepage": "https://rougin.github.io/windstorm/",
     "license": "MIT",
     "authors":
@@ -22,7 +22,8 @@
         "doctrine/orm": "~2.4",
         "illuminate/database": ">=4.1",
         "phpunit/phpunit": "~4.2|~5.7",
-        "scrutinizer/ocular": "~1.1"
+        "scrutinizer/ocular": "~1.1",
+        "symfony/yaml": ">=2.8.0"
     },
     "autoload":
     {
