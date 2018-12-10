@@ -16,8 +16,6 @@ matrix:
   include:
     - php: 5.3
       dist: precise
-    - php: 5.4
-      env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
 
 before_script:
   - travis_retry composer self-update

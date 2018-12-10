@@ -22,8 +22,7 @@
         "doctrine/orm": "~2.4",
         "illuminate/database": ">=4.1",
         "phpunit/phpunit": "~4.2|~5.7",
-        "scrutinizer/ocular": "~1.1",
-        "symfony/yaml": ">=2.8.0"
+        "scrutinizer/ocular": "~1.1"
     },
     "autoload":
     {
