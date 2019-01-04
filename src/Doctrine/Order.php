@@ -72,7 +72,7 @@ class Order implements OrderInterface
     {
         $this->order = 'ASC';
 
-        return $this;
+        return $this->set();
     }
 
     /**
@@ -84,7 +84,7 @@ class Order implements OrderInterface
     {
         $this->order = 'DESC';
 
-        return $this;
+        return $this->set();
     }
 
     /**
