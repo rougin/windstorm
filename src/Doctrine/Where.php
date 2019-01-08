@@ -308,20 +308,21 @@ class Where implements WhereInterface
     /**
      * Sets a parameter placeholder in the builder.
      *
-     * @param  mixed $value
+     * @param  mixed       $value
+     * @param  string|null $suffix
      * @return array
      */
-    protected function parameter($value)
+    protected function parameter($value, $suffix = null)
     {
         $key = $this->key[0] === ':' ? $this->key : ':' . $this->key;
 
-        $key = str_replace('.', '_', (string) $key);
+        $key = $suffix !== null ? $key . '_' . $suffix : $key;
 
-        $type = strtolower($this->type) . $this->method;
+        $key = strtolower(str_replace('.', '_', (string) $key));
 
         $this->builder->setParameter($key, $value, gettype($value));
 
-        return array((string) $key, (string) $type);
+        return array($key, strtolower($this->type) . $this->method);
     }
 
     /**
@@ -338,9 +339,9 @@ class Where implements WhereInterface
 
         foreach ($values as $index => $value)
         {
-            list($key, $type) = $this->parameter($value);
+            list($key, $type) = $this->parameter($value, $index);
 
-            array_push($keys, $key . '_' . (int) $index);
+            array_push($keys, $key);
         }
 
         return array((array) $keys, (string) $type);
