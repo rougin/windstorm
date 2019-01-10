@@ -1,9 +1,9 @@
 <?php
 
-use Rougin\Windstorm\Fixture\UserEntity;
+use Rougin\Windstorm\Fixture\Entities\User;
 
 return array(
-    new UserEntity(1, 'Windstorm'),
-    new UserEntity(2, 'SQL Builder'),
-    new UserEntity(3, 'Rougin Gutib'),
+    new User(1, 'Windstorm'),
+    new User(2, 'SQL Builder'),
+    new User(3, 'Rougin Gutib'),
 );

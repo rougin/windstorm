@@ -3,6 +3,7 @@
 namespace Rougin\Windstorm\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Rougin\Windstorm\CompositeInterface;
 use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
@@ -20,9 +21,19 @@ class Result implements ResultInterface
     protected $affected = 0;
 
     /**
+     * @var \Rougin\Windstorm\CompositeInterface|null
+     */
+    protected $composite = null;
+
+    /**
      * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
+
+    /**
+     * @var integer
+     */
+    protected $fetch = \PDO::FETCH_ASSOC;
 
     /**
      * @var \Doctrine\DBAL\Driver\Statement
@@ -57,19 +68,18 @@ class Result implements ResultInterface
      */
     public function execute(QueryInterface $query)
     {
-        $bindings = $query->bindings();
-
-        $sql = $query->sql();
-
-        $connection = $this->connection;
-
-        if ($query->type() === QueryInterface::TYPE_SELECT)
+        if ($query->type() !== QueryInterface::TYPE_SELECT)
         {
-            $this->result = $connection->executeQuery($sql, $bindings);
+            $this->affected = $this->response($query);
+
+            return $this;
         }
-        else
+
+        $this->result = $this->response($query);
+
+        if ($query instanceof CompositeInterface)
         {
-            $this->affected = $connection->executeUpdate($sql, $bindings);
+            $this->composite = $query;
         }
 
         return $this;
@@ -82,7 +92,18 @@ class Result implements ResultInterface
      */
     public function first()
     {
-        return $this->result->fetch(\PDO::FETCH_ASSOC);
+        $result = $this->result->fetch($this->fetch);
+
+        if ($this->composite)
+        {
+            $items = array($result);
+
+            $items = $this->composite($items);
+
+            return current($items);
+        }
+
+        return $result;
     }
 
     /**
@@ -92,6 +113,108 @@ class Result implements ResultInterface
      */
     public function items()
     {
-        return $this->result->fetchAll(\PDO::FETCH_ASSOC);
+        $items = $this->result->fetchAll($this->fetch);
+
+        if ($this->composite)
+        {
+            return $this->composite($items);
+        }
+
+        return $items;
+    }
+
+    /**
+     * Appends children output to original result.
+     *
+     * @param  array $items
+     * @param  array $result
+     * @param  string $local
+     * @param  string $foreign
+     * @param  string $field
+     * @return array
+     */
+    protected function append($items, $result, $local, $foreign, $field)
+    {
+        foreach ($items as $key => $item)
+        {
+            $items[$key][$field] = array();
+
+            foreach ($result as $child)
+            {
+                if ($child[$foreign] === $item[$local])
+                {
+                    $items[$key][$field][] = $child;
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Appends result from composite query to main result.
+     *
+     * @param  array $items
+     * @return array
+     */
+    protected function composite($items)
+    {
+        foreach ($this->composite->children() as $child)
+        {
+            $foreign = $child->foreign();
+
+            $field = $child->field();
+
+            $local = $child->local();
+
+            $ids = $this->identities($items, $local);
+
+            $stmt = $this->response($child->query()->where($foreign)->in($ids));
+
+            $result = $stmt->fetchAll($this->fetch);
+
+            $items = $this->append($items, $result, $local, $foreign, $field);
+        }
+
+        return $items;
+    }
+
+    /**
+     * Returns the values based of specified key.
+     *
+     * @param  string $items
+     * @param  string $key
+     * @return array
+     */
+    protected function identities($items, $key)
+    {
+        $ids = array();
+
+        foreach ($items as $item)
+        {
+            $ids[] = $item[$key];
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Executes the query from the connection instance.
+     *
+     * @param  \Rougin\Windstorm\QueryInterface $query
+     * @return \Doctrine\DBAL\Driver\Statement|null
+     */
+    protected function response(QueryInterface $query)
+    {
+        $bindings = $query->bindings();
+
+        $sql = (string) $query->sql();
+
+        if ($query->type() === QueryInterface::TYPE_SELECT)
+        {
+            return $this->connection->executeQuery($sql, $bindings);
+        }
+
+        return $this->connection->executeUpdate($sql, $bindings);
     }
 }
