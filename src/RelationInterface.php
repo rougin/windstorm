@@ -10,12 +10,12 @@ namespace Rougin\Windstorm;
  */
 interface RelationInterface
 {
-    const TYPE_LOCAL = 0;
+    const TYPE_PRIMARY = 0;
 
     const TYPE_FOREIGN = 1;
 
     /**
-     * Sets the field/column of a foreign/local table.
+     * Sets the field/column of a foreign/primary table.
      *
      * @param  integer $type
      * @param  string $name
@@ -24,7 +24,7 @@ interface RelationInterface
     public function field($type, $name);
 
     /**
-     * Sets the fields of a foreign/local table.
+     * Sets the fields of a foreign/primary table.
      *
      * @param  integer  $type
      * @param  string[] $values
@@ -42,20 +42,20 @@ interface RelationInterface
     public function foreign($table, $alias = null);
 
     /**
-     * Sets the local table.
+     * Sets the primary table.
      *
      * @param  string      $table
      * @param  string|null $alias
      * @return self
      */
-    public function local($table, $alias = null);
+    public function primary($table, $alias = null);
 
     /**
      * Generates the query instance from relation.
      *
-     * @param  string $local
+     * @param  string $primary
      * @param  string $foreign
      * @return \Rougin\Windstorm\QueryInterface
      */
-    public function make($local, $foreign);
+    public function make($primary, $foreign);
 }

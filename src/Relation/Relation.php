@@ -30,7 +30,7 @@ abstract class Relation
     /**
      * @var string|null
      */
-    protected $local = null;
+    protected $primary = null;
 
     /**
      * @var \Rougin\Windstorm\QueryInterface
@@ -52,7 +52,7 @@ abstract class Relation
     }
 
     /**
-     * Sets the field/column of a foreign/local table.
+     * Sets the field/column of a foreign/primary table.
      *
      * @param  integer $type
      * @param  string $name
@@ -64,7 +64,7 @@ abstract class Relation
     }
 
     /**
-     * Sets the fields of a foreign/local table.
+     * Sets the fields of a foreign/primary table.
      *
      * @param  integer  $type
      * @param  string[] $values
@@ -97,15 +97,15 @@ abstract class Relation
     }
 
     /**
-     * Sets the local table.
+     * Sets the primary table.
      *
      * @param  string      $table
      * @param  string|null $alias
      * @return self
      */
-    public function local($table, $alias = null)
+    public function primary($table, $alias = null)
     {
-        $this->local = $table;
+        $this->primary = $table;
 
         $this->alias[0] = $alias ?: $table[0];
     }

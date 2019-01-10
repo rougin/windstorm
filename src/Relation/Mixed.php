@@ -37,13 +37,13 @@ class Mixed extends Wrappable implements MixedInterface
      *
      * @param  string                           $column
      * @param  \Rougin\Windstorm\QueryInterface $query
-     * @param  string                           $local
+     * @param  string                           $primary
      * @param  string                           $foreign
      * @return self
      */
-    public function add($column, QueryInterface $query, $local, $foreign)
+    public function add($column, QueryInterface $query, $primary, $foreign)
     {
-        $child = new Child($column, $query, $local, $foreign);
+        $child = new Child($column, $query, $primary, $foreign);
 
         return $this->child($child);
     }

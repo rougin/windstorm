@@ -18,7 +18,7 @@ class ReturnUsersWithPosts implements MutatorInterface
     {
         $relation = new OneToMany($query);
 
-        $relation->local('users');
+        $relation->primary('users');
         $relation->field(0, 'id');
         $relation->field(0, 'name');
 

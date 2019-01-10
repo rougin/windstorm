@@ -34,11 +34,11 @@ class OneToMany extends Relation implements RelationInterface
     /**
      * Generates the query instance from relation.
      *
-     * @param  string $local
+     * @param  string $primary
      * @param  string $foreign
      * @return \Rougin\Windstorm\QueryInterface
      */
-    public function make($local, $foreign)
+    public function make($primary, $foreign)
     {
         $this->field(1, (string) $foreign);
 
@@ -46,22 +46,22 @@ class OneToMany extends Relation implements RelationInterface
 
         $query = $query->select((array) $this->columns(0));
 
-        $query->from($this->local, (string) $this->alias[0]);
+        $query->from($this->primary, (string) $this->alias[0]);
 
         $mixed = new Mixed($query);
 
-        return $this->child($mixed, $local, $foreign);
+        return $this->child($mixed, $primary, $foreign);
     }
 
     /**
      * Generates a child instance from the foreign table.
      *
      * @param  \Rougin\Windstorm\MixedInterface $mixed
-     * @param  string                           $local
+     * @param  string                           $primary
      * @param  string                           $foreign
      * @return \Rougin\Windstorm\MixedInterface
      */
-    protected function child(MixedInterface $mixed, $local, $foreign)
+    protected function child(MixedInterface $mixed, $primary, $foreign)
     {
         $child = clone $this->query;
 
@@ -69,7 +69,7 @@ class OneToMany extends Relation implements RelationInterface
 
         $child->from($this->foreign, $this->alias[1]);
 
-        $mixed->add($this->column, $child, $local, $foreign);
+        $mixed->add($this->column, $child, $primary, $foreign);
 
         return $mixed;
     }

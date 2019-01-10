@@ -31,7 +31,7 @@ interface ChildInterface extends QueryInterface
      *
      * @return string
      */
-    public function local();
+    public function primary();
 
     /**
      * Returns the specified query instance.

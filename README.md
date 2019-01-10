@@ -235,7 +235,7 @@ $relation = new OneToOne($query);
 // Sets "posts" as the primary table
 // and must provide "id", "title",
 // and "body" fields in the result
-$relation->local('posts');
+$relation->primary('posts');
 $relation->field(0, 'id');
 $relation->field(0, 'title');
 $relation->field(0, 'body');
@@ -270,7 +270,7 @@ $relation = new OneToMany($query);
 // Sets "users" as the primary table
 // and must provide fields "id" and
 // "name" in the result from the query
-$relation->local('users');
+$relation->primary('users');
 $relation->field(0, 'id');
 $relation->field(0, 'name');
 

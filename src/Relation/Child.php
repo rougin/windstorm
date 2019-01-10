@@ -26,17 +26,17 @@ class Child extends Wrappable implements ChildInterface
     /**
      * @var string
      */
-    protected $local = '';
+    protected $primary = '';
 
     /**
      * Initializes the child query instance.
      *
      * @param string                           $field
      * @param \Rougin\Windstorm\QueryInterface $query
-     * @param string                           $local
+     * @param string                           $primary
      * @param string                           $foreign
      */
-    public function __construct($field, QueryInterface $query, $local, $foreign)
+    public function __construct($field, QueryInterface $query, $primary, $foreign)
     {
         parent::__construct($query);
 
@@ -44,7 +44,7 @@ class Child extends Wrappable implements ChildInterface
 
         $this->foreign = $foreign;
 
-        $this->local = $local;
+        $this->primary = $primary;
     }
 
     /**
@@ -74,9 +74,9 @@ class Child extends Wrappable implements ChildInterface
      *
      * @return string
      */
-    public function local()
+    public function primary()
     {
-        return $this->local;
+        return $this->primary;
     }
 
     /**

@@ -126,14 +126,14 @@ class Result implements ResultInterface
     /**
      * Appends children output to original result.
      *
-     * @param  array $items
-     * @param  array $result
-     * @param  string $local
+     * @param  array  $items
+     * @param  array  $result
+     * @param  string $primary
      * @param  string $foreign
      * @param  string $field
      * @return array
      */
-    protected function append($items, $result, $local, $foreign, $field)
+    protected function append($items, $result, $primary, $foreign, $field)
     {
         foreach ($items as $key => $item)
         {
@@ -141,7 +141,7 @@ class Result implements ResultInterface
 
             foreach ($result as $child)
             {
-                if ($child[$foreign] === $item[$local])
+                if ($child[$foreign] === $item[$primary])
                 {
                     $items[$key][$field][] = $child;
                 }
@@ -165,15 +165,15 @@ class Result implements ResultInterface
 
             $field = $child->field();
 
-            $local = $child->local();
+            $primary = $child->primary();
 
-            $ids = $this->identities($items, $local);
+            $ids = $this->identities($items, $primary);
 
             $stmt = $this->response($child->query()->where($foreign)->in($ids));
 
             $result = $stmt->fetchAll($this->fetch);
 
-            $items = $this->append($items, $result, $local, $foreign, $field);
+            $items = $this->append($items, $result, $primary, $foreign, $field);
         }
 
         return $items;

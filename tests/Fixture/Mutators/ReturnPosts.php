@@ -20,15 +20,13 @@ class ReturnPosts implements MutatorInterface
 
         $posts = array('id', 'title', 'body');
 
-        $relation->local('posts');
+        $relation->primary('posts');
         $relation->fields(0, $posts);
 
         $users = array('id', 'name');
 
         $relation->foreign('users');
         $relation->fields(1, $users);
-
-        echo $relation->make('user_id', 'id');exit;
 
         return $relation->make('user_id', 'id');
     }
