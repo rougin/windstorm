@@ -30,9 +30,24 @@ class Query implements QueryInterface
     protected $sql = '';
 
     /**
+     * @var string
+     */
+    protected $table = '';
+
+    /**
      * @var integer
      */
     protected $type = self::TYPE_SELECT;
+
+    /**
+     * Clones the builder instance.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->builder = clone $this->builder;
+    }
 
     /**
      * Initializes the query instance.
