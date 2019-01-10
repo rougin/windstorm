@@ -289,4 +289,36 @@ class QueryTest extends TestCase
 
         $this->assertInstanceOf($expected, $result);
     }
+
+    /**
+     * Tests Query::__clone.
+     *
+     * @return void
+     */
+    public function testCloneMagicMethod()
+    {
+        $expected = $this->query;
+
+        $result = clone $this->query;
+
+        $result->select('p.*');
+
+        $this->assertNotEquals($expected, $result);
+    }
+
+    /**
+     * Tests QueryInterface::table.
+     *
+     * @return void
+     */
+    public function testTableMethod()
+    {
+        $expected = 'users';
+
+        $query = $this->query->deleteFrom($expected);
+
+        $result = $query->table();
+
+        $this->assertEquals($expected, $result);
+    }
 }
