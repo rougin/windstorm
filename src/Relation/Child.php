@@ -2,16 +2,16 @@
 
 namespace Rougin\Windstorm\Relation;
 
-use Rougin\Windstorm\YoungsterInterface;
+use Rougin\Windstorm\ChildInterface;
 use Rougin\Windstorm\QueryInterface;
 
 /**
- * Youngster
+ * Child
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-class Youngster extends Wrappable implements YoungsterInterface
+class Child extends Wrappable implements ChildInterface
 {
     /**
      * @var string

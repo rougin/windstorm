@@ -3,12 +3,12 @@
 namespace Rougin\Windstorm;
 
 /**
- * Youngster Interface
+ * Child Interface
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-interface YoungsterInterface extends QueryInterface
+interface ChildInterface extends QueryInterface
 {
     /**
      * Returns the field to store the result from the

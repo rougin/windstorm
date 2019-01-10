@@ -3,7 +3,7 @@
 namespace Rougin\Windstorm\Doctrine;
 
 use Doctrine\DBAL\Connection;
-use Rougin\Windstorm\CompositeInterface;
+use Rougin\Windstorm\MixedInterface;
 use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
@@ -21,9 +21,9 @@ class Result implements ResultInterface
     protected $affected = 0;
 
     /**
-     * @var \Rougin\Windstorm\CompositeInterface|null
+     * @var \Rougin\Windstorm\MixedInterface|null
      */
-    protected $composite = null;
+    protected $mixed = null;
 
     /**
      * @var \Doctrine\DBAL\Connection
@@ -77,9 +77,9 @@ class Result implements ResultInterface
 
         $this->result = $this->response($query);
 
-        if ($query instanceof CompositeInterface)
+        if ($query instanceof MixedInterface)
         {
-            $this->composite = $query;
+            $this->mixed = $query;
         }
 
         return $this;
@@ -94,11 +94,11 @@ class Result implements ResultInterface
     {
         $result = $this->result->fetch($this->fetch);
 
-        if ($this->composite)
+        if ($this->mixed)
         {
             $items = array($result);
 
-            $items = $this->composite($items);
+            $items = $this->mixed($items);
 
             return current($items);
         }
@@ -115,9 +115,9 @@ class Result implements ResultInterface
     {
         $items = $this->result->fetchAll($this->fetch);
 
-        if ($this->composite)
+        if ($this->mixed)
         {
-            return $this->composite($items);
+            return $this->mixed($items);
         }
 
         return $items;
@@ -152,14 +152,14 @@ class Result implements ResultInterface
     }
 
     /**
-     * Appends result from composite query to main result.
+     * Appends result from mixed query to main result.
      *
      * @param  array $items
      * @return array
      */
-    protected function composite($items)
+    protected function mixed($items)
     {
-        foreach ($this->composite->children() as $child)
+        foreach ($this->mixed->children() as $child)
         {
             $foreign = $child->foreign();
 

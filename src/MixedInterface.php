@@ -3,15 +3,15 @@
 namespace Rougin\Windstorm;
 
 /**
- * Composite Interface
+ * Mixed Interface
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-interface CompositeInterface extends QueryInterface
+interface MixedInterface extends QueryInterface
 {
     /**
-     * Creates a new youngster instance and adds it to children.
+     * Creates a new child instance and adds it to children.
      *
      * @param  string                           $column
      * @param  \Rougin\Windstorm\QueryInterface $query
@@ -22,17 +22,17 @@ interface CompositeInterface extends QueryInterface
     public function add($column, QueryInterface $query, $local, $foreign);
 
     /**
-     * Adds a new youngster instance directly to children.
+     * Returns all added child instances.
      *
-     * @param  \Rougin\Windstorm\ChildQueryInterface $youngster
-     * @return self
-     */
-    public function youngster(YoungsterInterface $youngster);
-
-    /**
-     * Returns all added youngster instances.
-     *
-     * @return \Rougin\Windstorm\ChildQueryInterface[]
+     * @return \Rougin\Windstorm\ChildInterface[]
      */
     public function children();
+
+    /**
+     * Adds a new child instance directly to children.
+     *
+     * @param  \Rougin\Windstorm\ChildInterface $child
+     * @return self
+     */
+    public function child(ChildInterface $child);
 }

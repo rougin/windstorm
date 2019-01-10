@@ -2,7 +2,7 @@
 
 namespace Rougin\Windstorm\Relation;
 
-use Rougin\Windstorm\CompositeInterface;
+use Rougin\Windstorm\MixedInterface;
 use Rougin\Windstorm\RelationInterface;
 
 /**
@@ -13,8 +13,17 @@ use Rougin\Windstorm\RelationInterface;
  */
 class OneToMany extends Relation implements RelationInterface
 {
+    /**
+     * @var string
+     */
     protected $column;
 
+    /**
+     * Sets the column name.
+     *
+     * @param  string $column
+     * @return self
+     */
     public function column($column)
     {
         $this->column = $column;
@@ -22,6 +31,13 @@ class OneToMany extends Relation implements RelationInterface
         return $this;
     }
 
+    /**
+     * Generates the query instance from relation.
+     *
+     * @param  string $local
+     * @param  string $foreign
+     * @return \Rougin\Windstorm\QueryInterface
+     */
     public function make($local, $foreign)
     {
         $this->field(1, (string) $foreign);
@@ -32,12 +48,20 @@ class OneToMany extends Relation implements RelationInterface
 
         $query->from($this->local, (string) $this->alias[0]);
 
-        $composite = new Composite($query);
+        $mixed = new Mixed($query);
 
-        return $this->child($composite, $local, $foreign);
+        return $this->child($mixed, $local, $foreign);
     }
 
-    protected function child(CompositeInterface $composite, $local, $foreign)
+    /**
+     * Generates a child instance from the foreign table.
+     *
+     * @param  \Rougin\Windstorm\MixedInterface $mixed
+     * @param  string                           $local
+     * @param  string                           $foreign
+     * @return \Rougin\Windstorm\MixedInterface
+     */
+    protected function child(MixedInterface $mixed, $local, $foreign)
     {
         $child = clone $this->query;
 
@@ -45,8 +69,8 @@ class OneToMany extends Relation implements RelationInterface
 
         $child->from($this->foreign, $this->alias[1]);
 
-        $composite->add($this->column, $child, $local, $foreign);
+        $mixed->add($this->column, $child, $local, $foreign);
 
-        return $composite;
+        return $mixed;
     }
 }
