@@ -68,7 +68,7 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $data = array('updated_at' => date('Y-m-d H:i:s'));
 
-        $result = $this->user->mutate(new UpdateUser(1, $data));
+        $result = $this->user->set(new UpdateUser(1, $data));
 
         $this->assertEquals(1, $result->affected());
     }
@@ -82,7 +82,7 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new User(1, 'Windstorm');
 
-        $result = $this->user->mutate(new ReturnUser(1));
+        $result = $this->user->set(new ReturnUser(1));
 
         $result = $result->first();
 
@@ -96,7 +96,7 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testItemsMethod()
     {
-        $result = $this->user->mutate(new ReturnUsers);
+        $result = $this->user->set(new ReturnUsers);
 
         $this->assertCount(3, $result->items());
     }
@@ -108,7 +108,7 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testItemsMethodWithoutMapping()
     {
-        $result = $this->query->mutate(new ReturnUsers);
+        $result = $this->query->set(new ReturnUsers);
 
         $this->assertCount(3, $result->items());
     }

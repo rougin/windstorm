@@ -21,7 +21,7 @@ class ReturnEntitiesTest extends TestCase
     {
         $expected = require __DIR__ . '/../Fixture/UserItems.php';
 
-        $result = $this->user->mutate(new ReturnUsers);
+        $result = $this->user->set(new ReturnUsers);
 
         $this->assertEquals($expected, $result->items());
     }

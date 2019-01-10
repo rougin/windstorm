@@ -81,7 +81,7 @@ class ResultTest extends TestCase
 
         $mutator = new CreateUser((array) $data);
 
-        $result = $this->repository->mutate($mutator);
+        $result = $this->repository->set($mutator);
 
         $this->assertEquals(1, $result->affected());
     }
@@ -99,7 +99,7 @@ class ResultTest extends TestCase
 
         $mutator = new UpdateUser(1, (array) $data);
 
-        $result = $this->repository->mutate($mutator);
+        $result = $this->repository->set($mutator);
 
         $this->assertEquals(1, $result->affected());
     }
@@ -113,7 +113,7 @@ class ResultTest extends TestCase
      */
     public function testExecuteMethodWithDelete()
     {
-        $result = $this->repository->mutate(new DeleteUser(4));
+        $result = $this->repository->set(new DeleteUser(4));
 
         $this->assertEquals(1, $result->affected());
     }
@@ -127,7 +127,7 @@ class ResultTest extends TestCase
      */
     public function testItemsMethod()
     {
-        $result = $this->repository->mutate(new ReturnUsers);
+        $result = $this->repository->set(new ReturnUsers);
 
         $this->assertCount(3, $result->items());
     }

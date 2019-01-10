@@ -19,7 +19,7 @@ class DeleteEntityTest extends TestCase
      */
     public function testSetMethod()
     {
-        $result = $this->user->mutate(new DeleteUser(4));
+        $result = $this->user->set(new DeleteUser(4));
 
         $this->assertEquals(1, $result->affected());
     }

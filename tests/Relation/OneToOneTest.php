@@ -66,8 +66,8 @@ class OneToOneTest extends \PHPUnit_Framework_TestCase
 
         $query = clone $this->query;
 
-        $query->mutate(new ReturnPosts);
-        $query->mapping(new PostMapping);
+        $query->set(new ReturnPosts);
+        $query->map(new PostMapping);
 
         $result = $query->items();
 

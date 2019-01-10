@@ -23,7 +23,7 @@ class CreateEntityTest extends TestCase
 
         $data['created_at'] = date('Y-m-d H:i:s');
 
-        $result = $this->user->mutate(new CreateUser($data));
+        $result = $this->user->set(new CreateUser($data));
 
         $this->assertEquals(1, $result->affected());
     }

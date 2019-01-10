@@ -98,7 +98,7 @@ class QueryRepository
      * @param  \Rougin\Windstorm\MappingInterface $mapping
      * @return self
      */
-    public function mapping(MappingInterface $mapping)
+    public function map(MappingInterface $mapping)
     {
         $this->mapping = $mapping;
 
@@ -111,7 +111,7 @@ class QueryRepository
      * @param  \Rougin\Windstorm\MutatorInterface $mutator
      * @return self
      */
-    public function mutate(MutatorInterface $mutator)
+    public function set(MutatorInterface $mutator)
     {
         $this->query = $mutator->set($this->query);
 

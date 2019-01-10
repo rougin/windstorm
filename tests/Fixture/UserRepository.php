@@ -25,6 +25,6 @@ class UserRepository extends QueryRepository
     {
         parent::__construct($query, $result);
 
-        $this->mapping(new UserMapping);
+        $this->map(new UserMapping);
     }
 }

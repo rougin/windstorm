@@ -66,8 +66,8 @@ class OneToManyTest extends \PHPUnit_Framework_TestCase
 
         $query = clone $this->query;
 
-        $query->mutate(new ReturnUsersWithPosts);
-        $query->mapping(new UserPostMapping);
+        $query->set(new ReturnUsersWithPosts);
+        $query->map(new UserPostMapping);
 
         $result = $query->items();
 
@@ -87,8 +87,8 @@ class OneToManyTest extends \PHPUnit_Framework_TestCase
 
         $query = clone $this->query;
 
-        $query->mutate(new ReturnUsersWithPosts);
-        $query->mapping(new UserPostMapping);
+        $query->set(new ReturnUsersWithPosts);
+        $query->map(new UserPostMapping);
 
         $result = $query->first();
 

@@ -57,7 +57,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     {
         $expected = require __DIR__ . '/../Fixture/UserItems.php';
 
-        $result = $this->user->mutate(new ReturnUsers);
+        $result = $this->user->set(new ReturnUsers);
 
         $this->assertEquals($expected, $result->items());
     }
@@ -75,7 +75,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
         $mutator = new UpdateUser(1, (array) $data);
 
-        $result = $this->user->mutate($mutator);
+        $result = $this->user->set($mutator);
 
         $this->assertEquals(1, $result->affected());
     }
