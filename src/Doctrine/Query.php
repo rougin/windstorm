@@ -342,6 +342,16 @@ class Query implements QueryInterface
     }
 
     /**
+     * Returns the table name from the query.
+     *
+     * @return string
+     */
+    public function table()
+    {
+        return $this->table;
+    }
+
+    /**
      * Returns the type of the query.
      *
      * @return integer

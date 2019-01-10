@@ -154,6 +154,8 @@ class Query implements QueryInterface
     {
         $this->type = self::TYPE_DELETE;
 
+        $this->table = (string) $table;
+
         return $this;
     }
 
@@ -167,6 +169,8 @@ class Query implements QueryInterface
     public function from($table, $alias = null)
     {
         $this->builder = $this->builder->from($table);
+
+        $this->table = (string) $table;
 
         return $this;
     }
@@ -356,6 +360,16 @@ class Query implements QueryInterface
         }
 
         return (string) $this->builder->toSql();
+    }
+
+    /**
+     * Returns the table name from the query.
+     *
+     * @return string
+     */
+    public function table()
+    {
+        return $this->table;
     }
 
     /**

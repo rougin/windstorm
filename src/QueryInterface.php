@@ -3,7 +3,7 @@
 namespace Rougin\Windstorm;
 
 /**
- * Order Interface
+ * Query Interface
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
@@ -173,13 +173,6 @@ interface QueryInterface
     public function limit($limit, $offset = null);
 
     /**
-     * Returns the safe and compiled SQL.
-     *
-     * @return string
-     */
-    public function sql();
-
-    /**
      * Returns the SQL bindings specified.
      *
      * @return array
@@ -187,16 +180,30 @@ interface QueryInterface
     public function bindings();
 
     /**
-     * Returns the type of the query.
-     *
-     * @return integer
-     */
-    public function type();
-
-    /**
      * Returns the instance of the query builder, if any.
      *
      * @return mixed
      */
     public function instance();
+
+    /**
+     * Returns the safe and compiled SQL.
+     *
+     * @return string
+     */
+    public function sql();
+
+    /**
+     * Returns the table name from the query.
+     *
+     * @return string
+     */
+    public function table();
+
+    /**
+     * Returns the type of the query.
+     *
+     * @return integer
+     */
+    public function type();
 }
