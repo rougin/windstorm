@@ -19,9 +19,9 @@ class QueryRepository
     protected $result;
 
     /**
-     * @var \Rougin\Windstorm\MapperInterface
+     * @var \Rougin\Windstorm\MappingInterface
      */
-    protected $mapper;
+    protected $mapping;
 
     /**
      * @var \Rougin\Windstorm\QueryInterface
@@ -65,7 +65,9 @@ class QueryRepository
      */
     public function first()
     {
-        return $this->map($this->execute()->first());
+        $item = $this->execute()->first();
+
+        return $this->mapping->map($item);
     }
 
     /**
@@ -75,27 +77,30 @@ class QueryRepository
      */
     public function items()
     {
-        $items = array();
-
         $result = $this->execute()->items();
 
-        foreach ($result as $item)
+        if ($this->mapping === null)
         {
-            $items[] = $this->map($item);
+            return $result;
         }
 
-        return $items;
+        foreach ($result as $key => $item)
+        {
+            $result[$key] = $this->mapping->map($item);
+        }
+
+        return $result;
     }
 
     /**
-     * Sets the mapper instance.
+     * Sets the mapping instance.
      *
-     * @param  \Rougin\Windstorm\MapperInterface $mapper
+     * @param  \Rougin\Windstorm\MappingInterface $mapping
      * @return self
      */
-    public function mapper(MapperInterface $mapper)
+    public function mapping(MappingInterface $mapping)
     {
-        $this->mapper = $mapper;
+        $this->mapping = $mapping;
 
         return $this;
     }
@@ -121,21 +126,5 @@ class QueryRepository
     protected function execute()
     {
         return $this->result->execute($this->query);
-    }
-
-    /**
-     * Maps the result data into a mapper instance.
-     *
-     * @param  mixed $data
-     * @return mixed
-     */
-    protected function map($data)
-    {
-        if ($this->mapper === null)
-        {
-            return (array) $data;
-        }
-
-        return $this->mapper->map($data);
     }
 }

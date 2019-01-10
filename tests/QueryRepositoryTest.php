@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Rougin\Windstorm\Doctrine\Query;
 use Rougin\Windstorm\Doctrine\Result;
+use Rougin\Windstorm\Fixture\Entities\User;
 use Rougin\Windstorm\Fixture\Mutators\ReturnUser;
 use Rougin\Windstorm\Fixture\Mutators\ReturnUsers;
 use Rougin\Windstorm\Fixture\Mutators\UpdateUser;
-use Rougin\Windstorm\Fixture\UserEntity;
 use Rougin\Windstorm\Fixture\UserRepository;
 
 /**
@@ -80,7 +80,7 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testFirstMethod()
     {
-        $expected = new UserEntity(1, 'Windstorm');
+        $expected = new User(1, 'Windstorm');
 
         $result = $this->user->mutate(new ReturnUser(1));
 
@@ -102,11 +102,11 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests QueryRepository::items without a mapper instance.
+     * Tests QueryRepository::items without a mapping instance.
      *
      * @return void
      */
-    public function testItemsMethodWithoutMapper()
+    public function testItemsMethodWithoutMapping()
     {
         $result = $this->query->mutate(new ReturnUsers);
 

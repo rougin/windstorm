@@ -2,6 +2,7 @@
 
 namespace Rougin\Windstorm\Fixture;
 
+use Rougin\Windstorm\Fixture\Mappings\UserMapping;
 use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\QueryRepository;
 use Rougin\Windstorm\ResultInterface;
@@ -24,6 +25,6 @@ class UserRepository extends QueryRepository
     {
         parent::__construct($query, $result);
 
-        $this->mapper(new UserMapper);
+        $this->mapping(new UserMapping);
     }
 }

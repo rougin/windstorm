@@ -1,16 +1,17 @@
 <?php
 
-namespace Rougin\Windstorm\Fixture;
+namespace Rougin\Windstorm\Fixture\Mappings;
 
-use Rougin\Windstorm\MapperInterface;
+use Rougin\Windstorm\Fixture\Entities\User;
+use Rougin\Windstorm\MappingInterface;
 
 /**
- * User Mapper
+ * User Mapping
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-class UserMapper implements MapperInterface
+class UserMapping implements MappingInterface
 {
     /**
      * Maps the result data into a class.
@@ -20,6 +21,6 @@ class UserMapper implements MapperInterface
      */
     public function map($data)
     {
-        return new UserEntity($data['id'], $data['name']);
+        return new User($data['id'], $data['name']);
     }
 }

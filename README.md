@@ -184,14 +184,14 @@ array(4) {
 }
 ```
 
-To map the result into a class, implement a mapper into a `MapperInterface`:
+To map the result into a class, implement a mapping into a `MappingInterface`:
 
 ``` php
-namespace Acme\Mappers;
+namespace Acme\Mappings;
 
 use Acme\Models\User;
 
-class UserMapper implements MapperInterface
+class UserMapping implements MappingInterface
 {
     public function map($data)
     {
@@ -203,9 +203,9 @@ class UserMapper implements MapperInterface
 ``` php
 // $query instanceof Rougin\Windstorm\QueryRepository;
 
-use Acme\Mappers\UserMapper;
+use Acme\Mappings\UserMapping;
 
-$query->mapper(new UserMapper);
+$query->mapping(new UserMapping);
 
 var_dump($query->first());
 ```
@@ -219,7 +219,7 @@ class Acme\Models\User#11 (2) {
 }
 ```
 
-Not specifying the `MapperInterface` will return the data as is from `ResultInterface`.
+Not specifying the `MappingInterface` will return the data as is from `ResultInterface`.
 
 ## Credits
 

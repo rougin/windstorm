@@ -3,12 +3,12 @@
 namespace Rougin\Windstorm;
 
 /**
- * Mapper Interface
+ * Mapping Interface
  *
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-interface MapperInterface
+interface MappingInterface
 {
     /**
      * Maps the result data into a class.
