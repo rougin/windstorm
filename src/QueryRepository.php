@@ -67,7 +67,12 @@ class QueryRepository
     {
         $item = $this->execute()->first();
 
-        return $this->mapping->map($item);
+        if ($this->mapping)
+        {
+            return $this->mapping->map($item);
+        }
+
+        return $item;
     }
 
     /**

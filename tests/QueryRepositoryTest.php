@@ -90,6 +90,26 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests QueryRepository::first without mapping.
+     *
+     * @return void
+     */
+    public function testFirstMethodWithoutMapping()
+    {
+        $expected = array('id' => '1');
+        $expected['name'] = 'Windstorm';
+        $expected['created_at'] = '2018-10-15 23:06:28';
+
+        $result = $this->query->set(new ReturnUser(1));
+
+        $result = $result->first();
+
+        unset($result['updated_at']);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * Tests QueryRepository::items.
      *
      * @return void
