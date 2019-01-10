@@ -21,9 +21,9 @@ class Result implements ResultInterface
     protected $affected = 0;
 
     /**
-     * @var \Rougin\Windstorm\MixedInterface|null
+     * @var \Rougin\Windstorm\MixedInterface
      */
-    protected $mixed = null;
+    protected $mixed;
 
     /**
      * @var \Doctrine\DBAL\Connection
@@ -182,7 +182,7 @@ class Result implements ResultInterface
     /**
      * Returns the values based of specified key.
      *
-     * @param  string $items
+     * @param  array  $items
      * @param  string $key
      * @return array
      */
@@ -202,7 +202,7 @@ class Result implements ResultInterface
      * Executes the query from the connection instance.
      *
      * @param  \Rougin\Windstorm\QueryInterface $query
-     * @return \Doctrine\DBAL\Driver\Statement|null
+     * @return \Doctrine\DBAL\Driver\Statement|integer
      */
     protected function response(QueryInterface $query)
     {
