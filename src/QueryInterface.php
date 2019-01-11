@@ -38,12 +38,13 @@ interface QueryInterface
     /**
      * Generates an INNER JOIN query.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return self
      */
-    public function innerJoin($table, $local, $foreign);
+    public function innerJoin($table, $local, $foreign, $alias = null);
 
     /**
      * Generates a LEFT JOIN query.
@@ -51,9 +52,10 @@ interface QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function leftJoin($table, $local, $foreign);
+    public function leftJoin($table, $local, $foreign, $alias = null);
 
     /**
      * Generates a RIGHT JOIN query.
@@ -61,9 +63,10 @@ interface QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function rightJoin($table, $local, $foreign);
+    public function rightJoin($table, $local, $foreign, $alias = null);
 
     /**
      * Generates an INSERT INTO query.

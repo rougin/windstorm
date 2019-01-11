@@ -202,13 +202,16 @@ class Query implements QueryInterface
     /**
      * Generates an INNER JOIN query.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return self
      */
-    public function innerJoin($table, $local, $foreign)
+    public function innerJoin($table, $local, $foreign, $alias = null)
     {
+        $table = $alias ? "$table as $alias" : $table;
+
         $this->builder = $this->builder->join($table, $local, '=', $foreign);
 
         return $this;
@@ -243,10 +246,13 @@ class Query implements QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function leftJoin($table, $local, $foreign)
+    public function leftJoin($table, $local, $foreign, $alias = null)
     {
+        $table = $alias ? "$table as $alias" : $table;
+
         $this->builder = $this->builder->join($table, $local, '=', $foreign, 'left');
 
         return $this;
@@ -310,10 +316,13 @@ class Query implements QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function rightJoin($table, $local, $foreign)
+    public function rightJoin($table, $local, $foreign, $alias = null)
     {
+        $table = $alias ? "$table as $alias" : $table;
+
         $this->builder = $this->builder->join($table, $local, '=', $foreign, 'right');
 
         return $this;

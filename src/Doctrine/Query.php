@@ -189,14 +189,15 @@ class Query implements QueryInterface
     /**
      * Generates an INNER JOIN query.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return self
      */
-    public function innerJoin($table, $local, $foreign)
+    public function innerJoin($table, $local, $foreign, $alias = null)
     {
-        list($alias, $where) = $this->condition($table, $local, $foreign);
+        list($alias, $where) = $this->condition($table, $local, $foreign, $alias);
 
         $this->builder->innerJoin($this->initial, $table, $alias, $where);
 
@@ -234,11 +235,12 @@ class Query implements QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function leftJoin($table, $local, $foreign)
+    public function leftJoin($table, $local, $foreign, $alias = null)
     {
-        list($alias, $where) = $this->condition($table, $local, $foreign);
+        list($alias, $where) = $this->condition($table, $local, $foreign, $alias);
 
         $this->builder->leftJoin($this->initial, $table, $alias, $where);
 
@@ -303,11 +305,12 @@ class Query implements QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function rightJoin($table, $local, $foreign)
+    public function rightJoin($table, $local, $foreign, $alias = null)
     {
-        list($alias, $where) = $this->condition($table, $local, $foreign);
+        list($alias, $where) = $this->condition($table, $local, $foreign, $alias);
 
         $this->builder->rightJoin($this->initial, $table, $alias, $where);
 
@@ -418,20 +421,27 @@ class Query implements QueryInterface
     /**
      * Returns a JOIN condition.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return string
      */
-    protected function condition($table, $local, $foreign)
+    protected function condition($table, $local, $foreign, $alias = null)
     {
-        $condition = $this->initial . '.' . $local;
+        if (strpos($local, '.') === false)
+        {
+            $local = $this->initial . '.' . $local;
+        }
 
-        $alias = $this->alias((string) $table);
+        if ($alias === null)
+        {
+            $alias = $this->alias((string) $table);
+        }
 
-        $condition .= ' = ' . $alias . '.' . $foreign;
+        $local .= ' = ' . $alias . '.' . $foreign;
 
-        return array($alias, (string) $condition);
+        return array($alias, (string) $local);
     }
 
     /**

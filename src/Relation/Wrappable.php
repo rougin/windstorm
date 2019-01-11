@@ -129,14 +129,15 @@ class Wrappable implements QueryInterface
     /**
      * Generates an INNER JOIN query.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return self
      */
-    public function innerJoin($table, $local, $foreign)
+    public function innerJoin($table, $local, $foreign, $alias = null)
     {
-        return $this->query->innerJoin($table, $local, $foreign);
+        return $this->query->innerJoin($table, $local, $foreign, $alias);
     }
 
     /**
@@ -166,11 +167,12 @@ class Wrappable implements QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function leftJoin($table, $local, $foreign)
+    public function leftJoin($table, $local, $foreign, $alias = null)
     {
-        return $this->query->leftJoin($table, $local, $foreign);
+        return $this->query->leftJoin($table, $local, $foreign, $alias);
     }
 
     /**
@@ -224,11 +226,12 @@ class Wrappable implements QueryInterface
      * @param  string $table
      * @param  string $local
      * @param  string $foreign
+     * @param
      * @return self
      */
-    public function rightJoin($table, $local, $foreign)
+    public function rightJoin($table, $local, $foreign, $alias = null)
     {
-        return $this->query->rightJoin($table, $local, $foreign);
+        return $this->query->rightJoin($table, $local, $foreign, $alias);
     }
 
     /**
