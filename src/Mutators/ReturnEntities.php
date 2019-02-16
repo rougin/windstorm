@@ -14,6 +14,11 @@ use Rougin\Windstorm\MutatorInterface;
 class ReturnEntities implements MutatorInterface
 {
     /**
+     * @var callable|null
+     */
+    protected $callback = null;
+
+    /**
      * @var string[]
      */
     protected $fields = array('*');
@@ -55,6 +60,26 @@ class ReturnEntities implements MutatorInterface
     {
         $query = $query->select($this->fields)->from($this->table);
 
+        if ($this->callback !== null)
+        {
+            $callback = $this->callback;
+
+            $query = $callback($query);
+        }
+
         return $query->limit($this->limit, (integer) $this->offset);
+    }
+
+    /**
+     * Sets a where callback to the query instance.
+     *
+     * @param  callable $callback
+     * @return self
+     */
+    public function callback($callback)
+    {
+        $this->callback = $callback;
+
+        return $this;
     }
 }

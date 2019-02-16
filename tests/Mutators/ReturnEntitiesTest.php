@@ -3,6 +3,7 @@
 namespace Rougin\Windstorm\Mutators;
 
 use Rougin\Windstorm\Fixture\Mutators\ReturnUsers;
+use Rougin\Windstorm\Fixture\Entities\User;
 
 /**
  * Return Entities Test
@@ -24,5 +25,26 @@ class ReturnEntitiesTest extends TestCase
         $result = $this->user->set(new ReturnUsers);
 
         $this->assertEquals($expected, $result->items());
+    }
+
+    /**
+     * Tests MutatorInterface::set with a callback.
+     *
+     * @return void
+     */
+    public function testSetMethodWithCallback()
+    {
+        $expected = array(new User(1, 'Windstorm'));
+
+        $mutator = new ReturnUsers;
+
+        $mutator->callback(function ($query)
+        {
+            return $query->where('name')->equals('Windstorm');
+        });
+
+        $result = $this->user->set($mutator)->items();
+
+        $this->assertEquals($expected, $result);
     }
 }
