@@ -57,6 +57,11 @@ class UpdateEntity implements MutatorInterface
 
         foreach ($this->data as $key => $value)
         {
+            if (isset($this->data[$this->primary]))
+            {
+                continue;
+            }
+
             $query = $query->set($key, $value);
         }
 
