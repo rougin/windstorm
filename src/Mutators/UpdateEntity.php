@@ -57,7 +57,7 @@ class UpdateEntity implements MutatorInterface
 
         foreach ($this->data as $key => $value)
         {
-            if (isset($this->data[$this->primary]))
+            if ($this->primary === $key)
             {
                 continue;
             }
