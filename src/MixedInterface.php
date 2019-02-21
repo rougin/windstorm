@@ -13,26 +13,23 @@ interface MixedInterface extends QueryInterface
     /**
      * Creates a new child instance and adds it to children.
      *
-     * @param  string                           $column
-     * @param  \Rougin\Windstorm\QueryInterface $query
-     * @param  string                           $local
-     * @param  string                           $foreign
+     * @param  \Rougin\Windstorm\ChildInterface $child
+     * @param  string                           $field
      * @return self
      */
-    public function add($column, QueryInterface $query, $local, $foreign);
+    public function add(ChildInterface $child, $field);
 
     /**
      * Returns all added child instances.
      *
      * @return \Rougin\Windstorm\ChildInterface[]
      */
-    public function children();
+    public function all();
 
     /**
-     * Adds a new child instance directly to children.
+     * Returns the primary key of the parent table.
      *
-     * @param  \Rougin\Windstorm\ChildInterface $child
-     * @return self
+     * @return string
      */
-    public function child(ChildInterface $child);
+    public function primary();
 }

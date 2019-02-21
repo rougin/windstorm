@@ -11,13 +11,11 @@ namespace Rougin\Windstorm;
 interface ChildInterface extends QueryInterface
 {
     /**
-     * Returns the field to store the result from the
-     * child query instance and append it to the result
-     * from the parent query instance as a single value.
+     * Returns the identifier column for identifying children from the parent table.
      *
      * @return string
      */
-    public function field();
+    public function column();
 
     /**
      * Returns the identifier column from the child table.
@@ -25,18 +23,4 @@ interface ChildInterface extends QueryInterface
      * @return string
      */
     public function foreign();
-
-    /**
-     * Returns the identifier column from the parent table.
-     *
-     * @return string
-     */
-    public function primary();
-
-    /**
-     * Returns the specified query instance.
-     *
-     * @return \Rougin\Windstorm\QueryInterface
-     */
-    public function query();
 }

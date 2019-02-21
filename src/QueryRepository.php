@@ -2,6 +2,7 @@
 
 namespace Rougin\Windstorm;
 
+use Rougin\Windstorm\MixedInterface;
 use Rougin\Windstorm\QueryInterface;
 use Rougin\Windstorm\ResultInterface;
 
@@ -23,10 +24,7 @@ class QueryRepository
      */
     protected $mapping;
 
-    /**
-     * @var \Rougin\Windstorm\QueryInterface
-     */
-    protected $original;
+    protected $mixed = null;
 
     /**
      * @var \Rougin\Windstorm\QueryInterface
@@ -44,8 +42,6 @@ class QueryRepository
         $this->result = $result;
 
         $this->query = $query;
-
-        $this->original = $query;
     }
 
     /**
@@ -55,7 +51,18 @@ class QueryRepository
      */
     public function affected()
     {
-        return $this->execute()->affected();
+        return $this->execute($this->query)->affected();
+    }
+
+    /**
+     * Executes the result against query instance.
+     *
+     * @param  \Rougin\Windstorm\QueryInterface $query
+     * @return \Rougin\Windstorm\ResultInterface
+     */
+    public function execute(QueryInterface $query)
+    {
+        return $this->result->execute($query);
     }
 
     /**
@@ -65,7 +72,12 @@ class QueryRepository
      */
     public function first()
     {
-        $item = $this->execute()->first();
+        if ($this->mixed !== null)
+        {
+            return current($this->items());
+        }
+
+        $item = $this->execute($this->query)->first();
 
         if ($this->mapping)
         {
@@ -82,7 +94,14 @@ class QueryRepository
      */
     public function items()
     {
-        $result = $this->execute()->items();
+        if ($this->mixed !== null)
+        {
+            $result = $this->combine();
+        }
+        else
+        {
+            $result = $this->execute($this->query)->items();
+        }
 
         if ($this->mapping === null)
         {
@@ -128,18 +147,53 @@ class QueryRepository
      */
     public function set(MutatorInterface $mutator)
     {
-        $this->query = $mutator->set($this->query);
+        $query = $mutator->set($this->query);
+
+        if ($query instanceof MixedInterface)
+        {
+            $this->mixed = $query;
+
+            return $this;
+        }
+
+        $this->query = $query;
 
         return $this;
     }
 
-    /**
-     * Executes the result against query instance.
-     *
-     * @return \Rougin\Windstorm\ResultInterface
-     */
-    protected function execute()
+    public function combine()
     {
-        return $this->result->execute($this->query);
+        $parent = $this->execute($this->mixed)->items();
+
+        $ids = array();
+
+        foreach ($parent as $item)
+        {
+            $ids[] = (integer) $item[$this->mixed->primary()];
+        }
+
+        foreach ($this->mixed->all() as $field => $child)
+        {
+            $children = $child->where($child->column())->in($ids);
+
+            $children = $this->execute($children)->items();
+
+            foreach ($parent as $index => $item)
+            {
+                $parent[$index][$field] = array();
+
+                foreach ($children as $key => $value)
+                {
+                    if ($item[$this->mixed->primary()] === $value[$child->foreign()])
+                    {
+                        $parent[$index][$field][] = $value;
+
+                        unset($children[$key]);
+                    }
+                }
+            }
+        }
+
+        return $parent;
     }
 }

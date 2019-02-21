@@ -4,7 +4,8 @@ namespace Rougin\Windstorm\Fixture\Mutators;
 
 use Rougin\Windstorm\MutatorInterface;
 use Rougin\Windstorm\QueryInterface;
-use Rougin\Windstorm\Relation\OneToMany;
+use Rougin\Windstorm\Relation\Child;
+use Rougin\Windstorm\Relation\Mixed;
 
 /**
  * Return Users With Posts Mutator
@@ -16,19 +17,18 @@ class ReturnUsersWithPosts implements MutatorInterface
 {
     public function set(QueryInterface $query)
     {
-        $relation = new OneToMany($query);
+        $fields = 'u.id as u_id, u.name as u_name';
+        $users = clone $query;
+        $users->select($fields)->from('users', 'u');
 
-        $relation->primary('users');
-        $relation->field(0, 'id');
-        $relation->field(0, 'name');
+        $fields = 'p.id as p_id, p.title as p_title, ';
+        $fields .= 'p.body as p_body, p.user_id as p_user_id';
+        $posts = clone $query;
+        $posts->select($fields)->from('posts', 'p');
 
-        $relation->foreign('posts');
-        $relation->field(1, 'id');
-        $relation->field(1, 'title');
-        $relation->field(1, 'body');
+        $mixed = new Mixed($users, 'u_id');
+        $child = new Child($posts, 'p_user_id', 'p.user_id');
 
-        $relation->column('posts');
-
-        return $relation->make('id', 'user_id');
+        return $mixed->add($child, 'u_posts');
     }
 }

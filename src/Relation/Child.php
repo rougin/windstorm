@@ -16,7 +16,7 @@ class Child extends Wrappable implements ChildInterface
     /**
      * @var string
      */
-    protected $field = '';
+    protected $column = '';
 
     /**
      * @var string
@@ -24,39 +24,29 @@ class Child extends Wrappable implements ChildInterface
     protected $foreign = '';
 
     /**
-     * @var string
-     */
-    protected $primary = '';
-
-    /**
      * Initializes the child query instance.
      *
-     * @param string                           $field
      * @param \Rougin\Windstorm\QueryInterface $query
-     * @param string                           $primary
      * @param string                           $foreign
+     * @param string                           $column
      */
-    public function __construct($field, QueryInterface $query, $primary, $foreign)
+    public function __construct(QueryInterface $query, $foreign, $column)
     {
         parent::__construct($query);
 
-        $this->field = $field;
+        $this->column = $column;
 
         $this->foreign = $foreign;
-
-        $this->primary = $primary;
     }
 
     /**
-     * Returns the field to store the result from the
-     * child query instance and append it to the result
-     * from the parent query instance as a single value.
+     * Returns the identifier column for identifying children from the parent table.
      *
      * @return string
      */
-    public function field()
+    public function column()
     {
-        return $this->field;
+        return $this->column;
     }
 
     /**
@@ -67,25 +57,5 @@ class Child extends Wrappable implements ChildInterface
     public function foreign()
     {
         return $this->foreign;
-    }
-
-    /**
-     * Returns the identifier column from the parent table.
-     *
-     * @return string
-     */
-    public function primary()
-    {
-        return $this->primary;
-    }
-
-    /**
-     * Returns the specified query instance.
-     *
-     * @return \Rougin\Windstorm\QueryInterface
-     */
-    public function query()
-    {
-        return $this->query;
     }
 }

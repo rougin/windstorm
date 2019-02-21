@@ -20,32 +20,35 @@ class Mixed extends Wrappable implements MixedInterface
     protected $children = array();
 
     /**
+     * @var string
+     */
+    protected $primary;
+
+    /**
      * Initializes the mixed instance.
      *
-     * @param \Rougin\Windstorm\QueryInterface   $query
-     * @param \Rougin\Windstorm\ChildInterface[] $children
+     * @param \Rougin\Windstorm\QueryInterface $query
+     * @param string                           $primary
      */
-    public function __construct(QueryInterface $query, array $children = array())
+    public function __construct(QueryInterface $query, $primary)
     {
         parent::__construct($query);
 
-        $this->children = $children;
+        $this->primary = $primary;
     }
 
     /**
-     * Creates a new child instance and adds it to children.
+     * Creates a new child instance and adds it to its children.
      *
-     * @param  string                           $column
-     * @param  \Rougin\Windstorm\QueryInterface $query
-     * @param  string                           $primary
-     * @param  string                           $foreign
+     * @param  \Rougin\Windstorm\ChildInterface $child
+     * @param  string                           $field
      * @return self
      */
-    public function add($column, QueryInterface $query, $primary, $foreign)
+    public function add(ChildInterface $child, $field)
     {
-        $child = new Child($column, $query, $primary, $foreign);
+        $this->children[$field] = $child;
 
-        return $this->child($child);
+        return $this;
     }
 
     /**
@@ -53,21 +56,18 @@ class Mixed extends Wrappable implements MixedInterface
      *
      * @return \Rougin\Windstorm\ChildInterface[]
      */
-    public function children()
+    public function all()
     {
         return $this->children;
     }
 
     /**
-     * Adds a new child instance directly to children.
+     * Returns the primary key of the parent table.
      *
-     * @param  \Rougin\Windstorm\ChildInterface $child
-     * @return self
+     * @return string
      */
-    public function child(ChildInterface $child)
+    public function primary()
     {
-        $this->children[] = $child;
-
-        return $this;
+        return $this->primary;
     }
 }

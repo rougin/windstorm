@@ -221,91 +221,6 @@ class Acme\Models\User#11 (2) {
 
 Not specifying the `MappingInterface` will return the data as is from `ResultInterface`.
 
-### SQL relationships
-
-Windstorm also provides helpers for generating SQL relationships. All relationships are implemented in `RelationInterface` and `RelationInterface::make` must return a `QueryInterface`.
-
-``` php
-// $query instanceof Rougin\Windstorm\QueryInterface
-
-use Rougin\Windstorm\Relation\OneToOne;
-
-$relation = new OneToOne($query);
-
-// Sets "posts" as the primary table
-// and must provide "id", "title",
-// and "body" fields in the result
-$relation->primary('posts');
-$relation->field(0, 'id');
-$relation->field(0, 'title');
-$relation->field(0, 'body');
-
-// Sets "users" as the foreign table
-// and must provide fields "id" and
-// "name" in the result from the query
-$relation->foreign('users');
-$relation->field(1, 'id');
-$relation->field(1, 'name');
-
-// Creates a QueryInterface instance
-// wherein the first parameter represents
-// the primary key while the second parameter
-// takes the field from the foreign table
-// and connects them in a INNER JOIN query
-$query = $relation->make('user_id', 'id');
-
-// SELECT p.id, p.title, p.body, u.id as u_id, u.name as u_name FROM posts p INNER JOIN users u ON p.user_id = u.id
-echo $query->sql();
-```
-
-For the `OneToMany` relation, it will return a `MixedInterface` which is an extension of `QueryInterface` but with separate child queries. More information about mixed queries will be explained in the next section.
-
-``` php
-// $query instanceof Rougin\Windstorm\QueryInterface
-
-use Rougin\Windstorm\Relation\OneToMany;
-
-$relation = new OneToMany($query);
-
-// Sets "users" as the primary table
-// and must provide fields "id" and
-// "name" in the result from the query
-$relation->primary('users');
-$relation->field(0, 'id');
-$relation->field(0, 'name');
-
-// Sets "posts" as the foreign table
-// and must provide "id", "title",
-// and "body" fields in the result
-$relation->foreign('posts');
-$relation->field(1, 'id');
-$relation->field(1, 'title');
-$relation->field(1, 'body');
-
-// Creates a field named "posts" that
-// will be used as a variable to store
-// the result from the foreign table
-// and will be appended in the result
-// from the primary table
-$relation->column('posts');
-
-// Creates a MixedInterface instance
-// wherein the first parameter represents
-// the primary key while the second parameter
-// takes the field from the foreign table
-// and later creates a ChildInterface
-// instance for the foreign table
-$query = $relation->make('id', 'user_id');
-
-// SELECT u.id, u.name FROM users u
-echo $query->sql();
-
-$child = current($query->children());
-
-// SELECT p.id, p.title, p.body, p.user_id FROM posts p
-echo $child->sql();
-```
-
 ### Mixed queries
 
 In executing SQL queries, only one `QueryInterface` is allowed to be executed in `ResultInterface`. But there can be scenarios wherein you need to execute a query instance then execute another query instance with the result returned from the former query. An attempt to solve this is to implement a `MixedInterface` which is still a `QueryInterface` but can be able to add child queries (implemented in `ChildInterface`).
@@ -317,16 +232,16 @@ In executing SQL queries, only one `QueryInterface` is allowed to be executed in
 use Rougin\Windstorm\Relation\Mixed;
 use Rougin\Windstorm\Relation\Child;
 
-$mixed = new Mixed($users);
+$mixed = new Mixed($users, 'id');
 
-$child = new Child('posts', $child, 'id', 'user_id');
+$child = new Child($child, 'id', 'user_id');
 
-$mixed->child($child);
+$mixed->add($child, 'posts');
 
 // SELECT u.id, u.name FROM users u
 echo $mixed->sql();
 
-$child = current($mixed->children());
+$child = current($mixed->all());
 
 // SELECT p.id, p.title, p.body, p.user_id FROM posts p
 echo $child->sql();
