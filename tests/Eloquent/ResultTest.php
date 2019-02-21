@@ -95,7 +95,7 @@ class ResultTest extends TestCase
      */
     public function testExecuteMethodWithUpdate()
     {
-        $data = array('name' => 'Windstorm');
+        $data = array('id' => 1, 'name' => 'Windstorm');
 
         $mutator = new UpdateUser(1, (array) $data);
 

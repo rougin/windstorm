@@ -22,14 +22,19 @@ use Rougin\Windstorm\Fixture\UserRepository;
 class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Rougin\Windstorm\Fixture\UserRepository
+     * @var \Rougin\Windstorm\QueryInterface
      */
-    protected $user;
+    protected $query;
 
     /**
      * @var \Rougin\Windstorm\QueryRepository
      */
-    protected $query;
+    protected $repo;
+
+    /**
+     * @var \Rougin\Windstorm\Fixture\UserRepository
+     */
+    protected $user;
 
     /**
      * Sets up the query builder instance.
@@ -52,9 +57,9 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $result = new Result($manager->getConnection());
 
-        $query = new Query($builder);
+        $this->query = $query = new Query($builder);
 
-        $this->query = new QueryRepository($query, $result);
+        $this->repo = new QueryRepository($query, $result);
 
         $this->user = new UserRepository($query, $result);
     }
@@ -100,7 +105,7 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
         $expected['name'] = 'Windstorm';
         $expected['created_at'] = '2018-10-15 23:06:28';
 
-        $result = $this->query->set(new ReturnUser(1));
+        $result = $this->repo->set(new ReturnUser(1));
 
         $result = $result->first();
 
@@ -128,8 +133,18 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testItemsMethodWithoutMapping()
     {
-        $result = $this->query->set(new ReturnUsers);
+        $result = $this->repo->set(new ReturnUsers);
 
         $this->assertCount(3, $result->items());
+    }
+
+    /**
+     * Tests QueryRepository::query.
+     *
+     * @return void
+     */
+    public function testQueryMethod()
+    {
+        $this->assertEquals($this->query, $this->repo->query());
     }
 }

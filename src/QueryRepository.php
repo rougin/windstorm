@@ -111,6 +111,16 @@ class QueryRepository
     }
 
     /**
+     * Returns the query instance.
+     *
+     * @return \Rougin\Windstorm\QueryRepository
+     */
+    public function query()
+    {
+        return clone $this->query;
+    }
+
+    /**
      * Mutates the specified query instance.
      *
      * @param  \Rougin\Windstorm\MutatorInterface $mutator

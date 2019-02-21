@@ -28,6 +28,20 @@ class ReturnEntitiesTest extends TestCase
     }
 
     /**
+     * Tests MutatorInterface::set without limit.
+     *
+     * @return void
+     */
+    public function testSetMethodWithoutLimit()
+    {
+        $expected = require __DIR__ . '/../Fixture/UserItems.php';
+
+        $result = $this->user->set(new ReturnUsers(null));
+
+        $this->assertEquals($expected, $result->items());
+    }
+
+    /**
      * Tests MutatorInterface::set with a callback.
      *
      * @return void
