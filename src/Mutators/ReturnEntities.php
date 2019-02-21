@@ -41,8 +41,8 @@ class ReturnEntities implements MutatorInterface
     /**
      * Initializes the mutator instance.
      *
-     * @param integer $limit
-     * @param integer $offset
+     * @param integer|null $limit
+     * @param integer      $offset
      */
     public function __construct($limit = 10, $offset = 0)
     {
@@ -65,6 +65,11 @@ class ReturnEntities implements MutatorInterface
             $callback = $this->callback;
 
             $query = $callback($query);
+        }
+
+        if ($this->limit === null)
+        {
+            return $query;
         }
 
         return $query->limit($this->limit, (integer) $this->offset);
