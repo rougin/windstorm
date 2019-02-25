@@ -164,10 +164,10 @@ class Wrappable implements QueryInterface
     /**
      * Generates a LEFT JOIN query.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
-     * @param
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return self
      */
     public function leftJoin($table, $local, $foreign, $alias = null)
@@ -223,10 +223,10 @@ class Wrappable implements QueryInterface
     /**
      * Generates a RIGHT JOIN query.
      *
-     * @param  string $table
-     * @param  string $local
-     * @param  string $foreign
-     * @param
+     * @param  string      $table
+     * @param  string      $local
+     * @param  string      $foreign
+     * @param  string|null $alias
      * @return self
      */
     public function rightJoin($table, $local, $foreign, $alias = null)
