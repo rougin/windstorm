@@ -85,6 +85,16 @@ class Result implements ResultInterface
     }
 
     /**
+     * Returns the last inserted ID.
+     *
+     * @return integer
+     */
+    public function inserted()
+    {
+        return $this->connection->lastInsertId();
+    }
+
+    /**
      * Returns all items from the result.
      *
      * @return mixed
