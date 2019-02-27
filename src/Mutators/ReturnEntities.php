@@ -52,6 +52,39 @@ class ReturnEntities implements MutatorInterface
     }
 
     /**
+     * Sets a where callback to the query instance.
+     *
+     * @param  callable $callback
+     * @return self
+     */
+    public function callback($callback)
+    {
+        $this->callback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Returns the limit per result.
+     *
+     * @return integer
+     */
+    public function limit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Returns the offset of the current result.
+     *
+     * @return integer
+     */
+    public function offset()
+    {
+        return $this->offset;
+    }
+
+    /**
      * Mutates the specified query instance.
      *
      * @param \Rougin\Windstorm\QueryInterface $query
@@ -73,18 +106,5 @@ class ReturnEntities implements MutatorInterface
         }
 
         return $query->limit($this->limit, (integer) $this->offset);
-    }
-
-    /**
-     * Sets a where callback to the query instance.
-     *
-     * @param  callable $callback
-     * @return self
-     */
-    public function callback($callback)
-    {
-        $this->callback = $callback;
-
-        return $this;
     }
 }
