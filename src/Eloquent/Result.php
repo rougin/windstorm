@@ -83,6 +83,16 @@ class Result implements ResultInterface
     }
 
     /**
+     * Returns the last inserted ID.
+     *
+     * @return integer
+     */
+    public function inserted()
+    {
+        return 0;
+    }
+
+    /**
      * Returns the first row from result.
      *
      * @return mixed

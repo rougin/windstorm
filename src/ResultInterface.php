@@ -33,6 +33,13 @@ interface ResultInterface
     public function first();
 
     /**
+     * Returns the last inserted ID.
+     *
+     * @return integer
+     */
+    public function inserted();
+
+    /**
      * Returns all items from the result.
      *
      * @return mixed
