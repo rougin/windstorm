@@ -24,6 +24,9 @@ class QueryRepository
      */
     protected $mapping;
 
+    /**
+     * @var \Rougin\Windstorm\MixedInterface
+     */
     protected $mixed = null;
 
     /**
@@ -85,6 +88,16 @@ class QueryRepository
         }
 
         return $item;
+    }
+
+    /**
+     * Returns the last inserted ID.
+     *
+     * @return integer
+     */
+    public function inserted()
+    {
+        return $this->execute($this->query)->inserted();
     }
 
     /**
