@@ -82,7 +82,7 @@ class QueryRepository
 
         $item = $this->execute($this->query)->first();
 
-        if ($this->mapping)
+        if ($this->mapping && $item)
         {
             return $this->mapping->map($item);
         }
@@ -116,7 +116,7 @@ class QueryRepository
             $result = $this->execute($this->query)->items();
         }
 
-        if ($this->mapping === null)
+        if ($this->mapping === null || ! $result)
         {
             return $result;
         }
@@ -183,6 +183,11 @@ class QueryRepository
         foreach ($parent as $item)
         {
             $ids[] = (integer) $item[$this->mixed->primary()];
+        }
+
+        if (count($ids) === 0)
+        {
+            return $parent;
         }
 
         foreach ($this->mixed->all() as $field => $child)
