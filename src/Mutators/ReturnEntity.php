@@ -14,6 +14,11 @@ use Rougin\Windstorm\MutatorInterface;
 class ReturnEntity implements MutatorInterface
 {
     /**
+     * @var string
+     */
+    protected $alias = '';
+
+    /**
      * @var string[]
      */
     protected $fields = array('*');
@@ -50,7 +55,12 @@ class ReturnEntity implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
-        $query = $query->select($this->fields)->from($this->table);
+        if (! $this->alias)
+        {
+            $this->alias = $this->table[0];
+        }
+
+        $query = $query->select($this->fields)->from($this->table, $this->alias);
 
         return $query->where($this->primary)->equals($this->id);
     }
