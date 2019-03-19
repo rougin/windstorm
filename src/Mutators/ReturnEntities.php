@@ -14,17 +14,22 @@ use Rougin\Windstorm\MutatorInterface;
 class ReturnEntities implements MutatorInterface
 {
     /**
+     * @var string
+     */
+    protected $alias = '';
+
+    /**
      * @var string[]
      */
     protected $fields = array('*');
 
     /**
-     * @var integer
+     * @var integer|null
      */
     protected $limit = 10;
 
     /**
-     * @var integer
+     * @var integer|null
      */
     protected $offset = 0;
 
@@ -42,13 +47,23 @@ class ReturnEntities implements MutatorInterface
      * Initializes the mutator instance.
      *
      * @param integer|null $limit
-     * @param integer      $offset
+     * @param integer|null $offset
      */
-    public function __construct($limit = 10, $offset = 0)
+    public function __construct($limit = null, $offset = null)
     {
         $this->limit = $limit;
 
         $this->offset = $offset;
+    }
+
+    /**
+     * Returns an array of specified fields.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        return $this->fields;
     }
 
     /**
@@ -78,7 +93,14 @@ class ReturnEntities implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
-        $query->select($this->fields)->from($this->table);
+        if (! $this->alias)
+        {
+            $this->alias = $this->table[0];
+        }
+
+        $query->select((array) $this->fields);
+
+        $query->from($this->table, $this->alias);
 
         foreach ($this->wheres as $key => $value)
         {
@@ -103,6 +125,22 @@ class ReturnEntities implements MutatorInterface
     public function where($key, $value)
     {
         $this->wheres[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets an array of where like conditions.
+     *
+     * @param  array $wheres
+     * @return self
+     */
+    public function wheres(array $wheres)
+    {
+        foreach ($wheres as $key => $value)
+        {
+            $this->where($key, $value);
+        }
 
         return $this;
     }
