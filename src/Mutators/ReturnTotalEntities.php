@@ -3,7 +3,6 @@
 namespace Rougin\Windstorm\Mutators;
 
 use Rougin\Windstorm\QueryInterface;
-use Rougin\Windstorm\MutatorInterface;
 
 /**
  * Return Total Entities Mutator
@@ -11,35 +10,12 @@ use Rougin\Windstorm\MutatorInterface;
  * @package Windstorm
  * @author  Rougin Gutib <rougingutib@gmail.com>
  */
-class ReturnTotalEntities implements MutatorInterface
+class ReturnTotalEntities extends ReturnEntities
 {
-    /**
-     * @var callable|null
-     */
-    protected $callback = null;
-
     /**
      * @var string
      */
     protected $keyword = 'total';
-
-    /**
-     * @var string
-     */
-    protected $table = '';
-
-    /**
-     * Sets a where callback to the query instance.
-     *
-     * @param  callable $callback
-     * @return self
-     */
-    public function callback($callback)
-    {
-        $this->callback = $callback;
-
-        return $this;
-    }
 
     /**
      * Returns the keyword used in getting the field from the result.
@@ -58,15 +34,13 @@ class ReturnTotalEntities implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
-        $field = (string) 'COUNT(*) as ' . $this->keyword;
+        $field = 'COUNT(*) as ' . $this->keyword;
 
-        $query = $query->select($field)->from($this->table);
+        $query->select($field)->from($this->table);
 
-        if ($this->callback !== null)
+        foreach ($this->wheres as $key => $value)
         {
-            $callback = $this->callback;
-
-            $query = $callback($query);
+            $query->where($key)->like("%$value%");
         }
 
         return $query;
