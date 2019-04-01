@@ -93,18 +93,50 @@ class ReturnEntities implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
-        if (! $this->alias)
+        $operations = array('<>', '>=', '<=', '>', '<', '=');
+
+        if (! $this->alias && $this->table)
         {
             $this->alias = $this->table[0];
         }
 
-        $query->select((array) $this->fields);
-
-        $query->from($this->table, $this->alias);
+        $query = $this->query($query);
 
         foreach ($this->wheres as $key => $value)
         {
-            $query->where($key)->like("%$value%");
+            $text = str_replace($operations, '', $value);
+
+            switch ($value[0])
+            {
+                case '<':
+                    $query->where($key)->lessThan($text);
+
+                    break;
+                case '<=':
+                    $query->where($key)->lessThanOrEqualTo($text);
+
+                    break;
+                case '<>':
+                    $query->where($key)->notEqualTo($text);
+
+                    break;
+                case '>':
+                    $query->where($key)->greaterThan($text);
+
+                    break;
+                case '>=':
+                    $query->where($key)->greaterThanOrEqualTo($text);
+
+                    break;
+                case '%':
+                    $query->where($key)->like($value);
+
+                    break;
+                default:
+                    $query->where($key)->equals($value);
+
+                    break;
+            }
         }
 
         if ($this->limit === null)
@@ -143,5 +175,18 @@ class ReturnEntities implements MutatorInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Sets a predefined query instance.
+     *
+     * @param  \Rougin\Windstorm\QueryInterface $query
+     * @return \Rougin\Windstorm\QueryInterface
+     */
+    protected function query(QueryInterface $query)
+    {
+        $query->select((array) $this->fields);
+
+        return $query->from($this->table, $this->alias);
     }
 }
