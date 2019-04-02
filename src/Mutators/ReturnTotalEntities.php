@@ -28,21 +28,14 @@ class ReturnTotalEntities extends ReturnEntities
     }
 
     /**
-     * Mutates the specified query instance.
+     * Sets a predefined query instance.
      *
      * @param \Rougin\Windstorm\QueryInterface $query
      */
-    public function set(QueryInterface $query)
+    protected function query(QueryInterface $query)
     {
         $field = 'COUNT(*) as ' . $this->keyword;
 
-        $query->select($field)->from($this->table);
-
-        foreach ($this->wheres as $key => $value)
-        {
-            $query->where($key)->like("%$value%");
-        }
-
-        return $query;
+        return $query->select($field)->from($this->table);
     }
 }

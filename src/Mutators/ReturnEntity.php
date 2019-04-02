@@ -55,13 +55,24 @@ class ReturnEntity implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
-        if (! $this->alias)
+        if (! $this->alias && $this->table)
         {
             $this->alias = $this->table[0];
         }
 
-        $query = $query->select($this->fields)->from($this->table, $this->alias);
+        $query = $this->query($query);
 
         return $query->where($this->primary)->equals($this->id);
+    }
+
+    /**
+     * Sets a predefined query instance.
+     *
+     * @param  \Rougin\Windstorm\QueryInterface $query
+     * @return \Rougin\Windstorm\QueryInterface
+     */
+    protected function query(QueryInterface $query)
+    {
+        return $query->select($this->fields)->from($this->table, $this->alias);
     }
 }
