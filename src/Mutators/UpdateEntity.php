@@ -13,10 +13,17 @@ use Rougin\Windstorm\MutatorInterface;
  */
 class UpdateEntity implements MutatorInterface
 {
+    const UPDATED_AT = 'updated_at';
+
     /**
      * @var array
      */
     protected $data = array();
+
+    /**
+     * @var string
+     */
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     /**
      * @var integer
@@ -32,6 +39,11 @@ class UpdateEntity implements MutatorInterface
      * @var string
      */
     protected $table = '';
+
+    /**
+     * @var boolean
+     */
+    protected $timestamp = true;
 
     /**
      * Initializes the mutator instance.
@@ -53,6 +65,11 @@ class UpdateEntity implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
+        if ($this->timestamp)
+        {
+            $this->data[static::UPDATED_AT] = date($this->dateFormat);
+        }
+
         $query = $query->update($this->table);
 
         foreach ($this->data as $key => $value)
