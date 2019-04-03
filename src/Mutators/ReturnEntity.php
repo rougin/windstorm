@@ -42,10 +42,13 @@ class ReturnEntity implements MutatorInterface
      * Initializes the mutator instance.
      *
      * @param integer $id
+     * @param boolean $array
      */
-    public function __construct($id)
+    public function __construct($id, $array = false)
     {
         $this->id = $id;
+
+        $this->array = $array;
     }
 
     /**
@@ -58,6 +61,11 @@ class ReturnEntity implements MutatorInterface
         if (! $this->alias && $this->table)
         {
             $this->alias = $this->table[0];
+        }
+
+        if ($this->array === true)
+        {
+            $this->fields[] = '0 as ' . $this->alias . '_array';
         }
 
         $query = $this->query($query);
