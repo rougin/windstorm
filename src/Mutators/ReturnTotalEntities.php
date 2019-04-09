@@ -34,8 +34,8 @@ class ReturnTotalEntities extends ReturnEntities
      */
     protected function query(QueryInterface $query)
     {
-        $field = 'COUNT(*) as ' . $this->keyword;
+        $query->select('COUNT(*) as ' . $this->keyword);
 
-        return $query->select($field)->from($this->table);
+        return $query->from($this->table, $this->alias);
     }
 }
