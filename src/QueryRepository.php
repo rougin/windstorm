@@ -20,9 +20,9 @@ class QueryRepository
     protected $result;
 
     /**
-     * @var \Rougin\Windstorm\MappingInterface
+     * @var \Rougin\Windstorm\MappingInterface|null
      */
-    protected $mapping;
+    protected $mapping = null;
 
     /**
      * @var \Rougin\Windstorm\MixedInterface
@@ -132,10 +132,10 @@ class QueryRepository
     /**
      * Sets the mapping instance.
      *
-     * @param  \Rougin\Windstorm\MappingInterface $mapping
+     * @param  \Rougin\Windstorm\MappingInterface|null $mapping
      * @return self
      */
-    public function map(MappingInterface $mapping)
+    public function map(MappingInterface $mapping = null)
     {
         $this->mapping = $mapping;
 
