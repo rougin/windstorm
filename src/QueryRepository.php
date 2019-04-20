@@ -206,7 +206,7 @@ class QueryRepository
                     {
                         $parent[$index][$field][] = $value;
 
-                        unset($children[$key]);
+                        // unset($children[$key]);
                     }
                 }
             }
