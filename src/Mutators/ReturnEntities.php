@@ -106,7 +106,9 @@ class ReturnEntities implements MutatorInterface
         {
             $text = str_replace($operations, '', $value);
 
-            switch ($value[0])
+            $operator = str_replace($text, '', $value);
+
+            switch ($operator)
             {
                 case '<':
                     $query->where($key)->lessThan($text);
@@ -128,16 +130,24 @@ class ReturnEntities implements MutatorInterface
                     $query->where($key)->greaterThanOrEqualTo($text);
 
                     break;
-                case '%':
-                    $query->where($key)->like($value);
-
-                    break;
                 default:
+                    if ($value[0] === '%' || $value[strlen($value) - 1] === '%')
+                    {
+                        break;
+                    }
+
                     $query->where($key)->equals($value);
 
                     break;
             }
+
+            if ($value[0] === '%' || $value[strlen($value) - 1] === '%')
+            {
+                $query->where($key)->like($value);
+            }
         }
+
+        // echo $query . '<br>';
 
         if ($this->limit === null)
         {
