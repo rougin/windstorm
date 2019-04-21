@@ -18,6 +18,29 @@ class ReturnTotalEntities extends ReturnEntities
     protected $keyword = 'total';
 
     /**
+     * @var integer|null
+     */
+    protected $limit = null;
+
+    /**
+     * @var integer|null
+     */
+    protected $offset = null;
+
+    /**
+     * Initializes the mutator instance.
+     *
+     * @param string|null $table
+     */
+    public function __construct($table = null)
+    {
+        if ($table)
+        {
+            $this->table = $table;
+        }
+    }
+
+    /**
      * Returns the keyword used in getting the field from the result.
      *
      * @return string
@@ -35,6 +58,11 @@ class ReturnTotalEntities extends ReturnEntities
     protected function query(QueryInterface $query)
     {
         $query->select('COUNT(*) as ' . $this->keyword);
+
+        if (! $this->alias && $this->table)
+        {
+            $this->alias = $this->table[0];
+        }
 
         return $query->from($this->table, $this->alias);
     }
