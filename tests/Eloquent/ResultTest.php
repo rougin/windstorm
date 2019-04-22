@@ -45,25 +45,17 @@ class ResultTest extends TestCase
 
     public function testExecuteMethod()
     {
-        $expected = array('id' => (integer) 1);
-
-        $expected['name'] = 'Windstorm';
-
-        $expected['created_at'] = '2018-10-15 23:06:28';
-
-        $expected['updated_at'] = null;
+        $expected = 'Windstorm';
 
         $result = new Result;
 
         $query = $this->query->select(array('*'));
 
-        $query = $query->from('users');
-
-        $response = $result->execute($query);
+        $response = $result->execute($query->from('users'));
 
         $result = $response->first()->toArray();
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result['name']);
     }
 
     /**
