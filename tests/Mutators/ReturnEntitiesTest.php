@@ -42,20 +42,17 @@ class ReturnEntitiesTest extends TestCase
     }
 
     /**
-     * Tests MutatorInterface::set with a callback.
+     * Tests MutatorInterface::set with where conditions.
      *
      * @return void
      */
-    public function testSetMethodWithCallback()
+    public function testSetMethodWithWheres()
     {
         $expected = array(new User(1, 'Windstorm'));
 
         $mutator = new ReturnUsers;
 
-        $mutator->callback(function ($query)
-        {
-            return $query->where('name')->equals('Windstorm');
-        });
+        $mutator->where('name', 'Windstorm');
 
         $result = $this->user->set($mutator)->items();
 
