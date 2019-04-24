@@ -192,7 +192,7 @@ class QueryRepository
 
         foreach ($this->mixed->all() as $field => $child)
         {
-            $children = $child->where($child->column())->in($ids);
+            $children = $child->andWhere($child->column())->in($ids);
 
             $children = $this->execute($children)->items();
 
