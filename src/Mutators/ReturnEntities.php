@@ -102,6 +102,8 @@ class ReturnEntities implements MutatorInterface
 
         $query = $this->query($query);
 
+        $multiple = false;
+
         foreach ($this->wheres as $key => $value)
         {
             $text = str_replace($operations, '', $value);
@@ -111,23 +113,58 @@ class ReturnEntities implements MutatorInterface
             switch ($operator)
             {
                 case '<':
-                    $query->where($key)->lessThan($text);
+                    if ($multiple)
+                    {
+                        $query->andWhere($key)->lessThan($text);
+                    }
+                    else
+                    {
+                        $query->where($key)->lessThan($text);
+                    }
 
                     break;
                 case '<=':
-                    $query->where($key)->lessThanOrEqualTo($text);
+                    if ($multiple)
+                    {
+                        $query->andWhere($key)->lessThanOrEqualTo($text);
+                    }
+                    else
+                    {
+                        $query->where($key)->lessThanOrEqualTo($text);
+                    }
 
                     break;
                 case '<>':
-                    $query->where($key)->notEqualTo($text);
+                    if ($multiple)
+                    {
+                        $query->andWhere($key)->notEqualTo($text);
+                    }
+                    else
+                    {
+                        $query->where($key)->notEqualTo($text);
+                    }
 
                     break;
                 case '>':
-                    $query->where($key)->greaterThan($text);
+                    if ($multiple)
+                    {
+                        $query->andWhere($key)->greaterThan($text);
+                    }
+                    else
+                    {
+                        $query->where($key)->greaterThan($text);
+                    }
 
                     break;
                 case '>=':
-                    $query->where($key)->greaterThanOrEqualTo($text);
+                    if ($multiple)
+                    {
+                        $query->andWhere($key)->greaterThanOrEqualTo($text);
+                    }
+                    else
+                    {
+                        $query->where($key)->greaterThanOrEqualTo($text);
+                    }
 
                     break;
                 default:
@@ -136,18 +173,34 @@ class ReturnEntities implements MutatorInterface
                         break;
                     }
 
-                    $query->where($key)->equals($value);
+                    if ($multiple)
+                    {
+                        $query->andWhere($key)->equals($value);
+                    }
+                    else
+                    {
+                        $query->where($key)->equals($value);
+                    }
 
                     break;
             }
 
             if ($value[0] === '%' || $value[strlen($value) - 1] === '%')
             {
-                $query->where($key)->like($value);
+                if ($multiple)
+                {
+                    $query->andWhere($key)->like($value);
+                }
+                else
+                {
+                    $query->where($key)->like($value);
+                }
             }
+
+            $multiple = true;
         }
 
-        // echo $query . '<br>';
+        $multiple = false;
 
         if ($this->limit === null)
         {
