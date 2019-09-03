@@ -142,8 +142,6 @@ class QueryRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->repo->set($mutator)->first();
 
-        echo json_encode($result);
-
         $this->assertEquals($expected, $result);
     }
 
