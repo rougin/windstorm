@@ -93,8 +93,6 @@ class ReturnEntities implements MutatorInterface
      */
     public function set(QueryInterface $query)
     {
-        $operations = array('<>', '>=', '<=', '>', '<', '=');
-
         if (! $this->alias && $this->table)
         {
             $this->alias = $this->table[0];
@@ -104,8 +102,12 @@ class ReturnEntities implements MutatorInterface
 
         $multiple = false;
 
+        $operations = array('<>', '>=', '<=', '>', '<', '=');
+
         foreach ($this->wheres as $key => $value)
         {
+            $method = $multiple ? 'andWhere' : 'where';
+
             $text = str_replace($operations, '', $value);
 
             $operator = str_replace($text, '', $value);
@@ -113,94 +115,40 @@ class ReturnEntities implements MutatorInterface
             switch ($operator)
             {
                 case '<':
-                    if ($multiple)
-                    {
-                        $query->andWhere($key)->lessThan($text);
-                    }
-                    else
-                    {
-                        $query->where($key)->lessThan($text);
-                    }
+                    $query->{$method}($key)->lessThan($text);
 
                     break;
                 case '<=':
-                    if ($multiple)
-                    {
-                        $query->andWhere($key)->lessThanOrEqualTo($text);
-                    }
-                    else
-                    {
-                        $query->where($key)->lessThanOrEqualTo($text);
-                    }
+                    $query->{$method}($key)->lessThanOrEqualTo($text);
 
                     break;
                 case '<>':
-                    if ($multiple)
-                    {
-                        $query->andWhere($key)->notEqualTo($text);
-                    }
-                    else
-                    {
-                        $query->where($key)->notEqualTo($text);
-                    }
+                    $query->{$method}($key)->notEqualTo($text);
 
                     break;
                 case '>':
-                    if ($multiple)
-                    {
-                        $query->andWhere($key)->greaterThan($text);
-                    }
-                    else
-                    {
-                        $query->where($key)->greaterThan($text);
-                    }
+                    $query->{$method}($key)->greaterThan($text);
 
                     break;
                 case '>=':
-                    if ($multiple)
-                    {
-                        $query->andWhere($key)->greaterThanOrEqualTo($text);
-                    }
-                    else
-                    {
-                        $query->where($key)->greaterThanOrEqualTo($text);
-                    }
+                    $query->{$method}($key)->greaterThanOrEqualTo($text);
 
                     break;
                 default:
-                    if ($value[0] === '%' || $value[strlen($value) - 1] === '%')
+                    if (strpos($value, '%') === false)
                     {
+                        $query->{$method}($key)->equals($value);
+
                         break;
                     }
 
-                    if ($multiple)
-                    {
-                        $query->andWhere($key)->equals($value);
-                    }
-                    else
-                    {
-                        $query->where($key)->equals($value);
-                    }
+                    $query->{$method}($key)->like($value);
 
                     break;
-            }
-
-            if ($value[0] === '%' || $value[strlen($value) - 1] === '%')
-            {
-                if ($multiple)
-                {
-                    $query->andWhere($key)->like($value);
-                }
-                else
-                {
-                    $query->where($key)->like($value);
-                }
             }
 
             $multiple = true;
         }
-
-        $multiple = false;
 
         if ($this->limit === null)
         {
