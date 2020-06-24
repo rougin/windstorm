@@ -37,11 +37,11 @@ use Rougin\Windstorm\Doctrine\Query;
 $query = new Query(new Builder($platform));
 ```
 
-List of supported platforms: https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/platforms.html
+List of supported platforms for the Doctrine DBAL: https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/platforms.html
 
 #### Using a `Connection` instance
 
-If the platform needs to came from a database connection, use `Connection::createQueryBuilder` instead:
+If the platform needs to came from a database connection, use the `Connection::createQueryBuilder` method instead:
 
 ``` php
 use Doctrine\DBAL\Connection;
@@ -52,7 +52,7 @@ use Rougin\Windstorm\Doctrine\Query;
 $query = new Query($connection->createQueryBuilder());
 ```
 
-Getting a connection: https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/configuration.html#configuration
+For a documentation on how to get a connection: https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/configuration.html
 
 ### Query Builder
 
@@ -62,10 +62,10 @@ The query builder syntax is similar when writing SQL queries:
 // $query instanceof Rougin\Windstorm\QueryInterface
 
 $query = $query
-->select(array('u.id', 'u.name'))
-->from('users', 'u')
-->where('name')->like('%winds%')
-->orderBy('created_at')->descending();
+    ->select(array('u.id', 'u.name'))
+    ->from('users', 'u')
+    ->where('name')->like('%winds%')
+    ->orderBy('created_at')->descending();
 
 // SELECT u.id, u.name FROM users u WHERE u.name LIKE :u_name ORDER BY u.created_at DESC
 $sql = $query->sql();
@@ -184,14 +184,14 @@ array(4) {
 }
 ```
 
-To map the result into a class, implement a mapping into a `MappingInterface`:
+To map the result into a class, implement a mapper into a `MapperInterface`:
 
 ``` php
-namespace Acme\Mappings;
+namespace Acme\Mappers;
 
 use Acme\Models\User;
 
-class UserMapping implements MappingInterface
+class UserMapper implements MapperInterface
 {
     public function map($data)
     {
@@ -203,9 +203,9 @@ class UserMapping implements MappingInterface
 ``` php
 // $query instanceof Rougin\Windstorm\QueryRepository;
 
-use Acme\Mappings\UserMapping;
+use Acme\Mappers\UserMapper;
 
-$query->mapping(new UserMapping);
+$query->mapper(new UserMapper);
 
 var_dump($query->first());
 ```
@@ -219,7 +219,7 @@ class Acme\Models\User#11 (2) {
 }
 ```
 
-Not specifying the `MappingInterface` will return the data as is from `ResultInterface`.
+Not implementing a class based from the `MapperInterface` will return the data as it is from from `ResultInterface`.
 
 ### Mixed queries
 
