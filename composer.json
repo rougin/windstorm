@@ -1,15 +1,15 @@
 {
     "name": "rougin/windstorm",
     "description": "A chainable, expressive, and interoperable SQL query builder.",
-    "homepage": "https://rougin.github.io/windstorm/",
+    "homepage": "https://roug.in/windstorm/",
     "license": "MIT",
     "authors":
     [
         {
             "name": "Rougin Gutib",
             "email": "rougingutib@gmail.com",
-            "homepage": "https://rougin.github.io",
-            "role": "Developer"
+            "homepage": "https://roug.in/",
+            "role": "Software Engineer"
         }
     ],
     "require":
